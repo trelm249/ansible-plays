@@ -1,0 +1,32 @@
+#######
+#Filename: newepo.yml
+#Description: Updates the McAfee EPO agent
+#Author: Trae Elmore
+#######
+
+- name: Update McAfee EPO agent on linux hosts
+  hosts: tyrell hercule alpha-db alpha-db2 eagle loki lobo
+
+  tasks:
+
+  - name: "Remove the old EPO rpm"
+    package:
+      name=MFEcma
+      state=absent
+
+  - name: "copy over the new EPO install files"
+    copy:
+      src: './agentPackages'
+      dest: '/root/'
+      owner: root
+      group: root
+      mode: 0750
+
+  - name: "install the new EPO agent"
+    shell: '/root/agentPackages/install.sh -i'
+
+  - name: "clean up install files"
+    file:
+      path: '/root/agentPackages'
+      state: absent
+    

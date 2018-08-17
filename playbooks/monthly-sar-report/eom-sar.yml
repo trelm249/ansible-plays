@@ -1,0 +1,18 @@
+---
+#this playbook hits all hosts runs the local sar report script and fetches it.
+- name: run and retrieve the EOM SAR report from all hosts
+  hosts: all-linux
+  remote_user: some-user
+
+  tasks:
+  - name: run the sar-report script and write the output to a file
+    shell: rm *.stats.*; /usr/local/bin/sar-report.sh |tee -a ~/{{ inventory_hostname }}.stats.$(date +%F)
+
+  - shell: (cd /home/some-user/; find . -maxdepth 1 -type f) |grep stats |cut -d '/' -f2 
+    register: files_to_copy
+
+  - fetch:
+     src: /home/some-user/{{ files_to_copy.stdout }}
+     dest: /var/www/html/pub/sar-reports/
+     flat: yes
+

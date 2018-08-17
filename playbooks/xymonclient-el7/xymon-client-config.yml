@@ -1,0 +1,63 @@
+---
+#this playbook sets up the xymon client for el7 linux systems.
+- name: setup the xymon client
+  hosts: some-linux-host
+  remote_user: nimdax
+
+  tasks:
+
+  - name: "Ensure xymon-client rpm is installed"
+    package:
+      name="{{item}}"
+      state=present
+    with_items:
+      - xymonclient
+
+
+  - file :
+     path: /opt/xymon/tmp
+     state: directory
+     owner: xymon
+     group: xymon
+
+  - file :
+     path: /opt/xymon/ext
+     state: directory
+     owner: xymon
+     group: xymon
+
+
+  - copy:
+     src: ./clientlaunch.cfg
+     dest: /opt/xymon/etc/
+     mode: 0640
+     owner: xymon
+     group: xymon
+
+  - copy:
+     src: ./fipstest.sh
+     dest: /opt/xymon/ext/
+     mode: 0750
+     owner: xymon
+     group: xymon
+
+  - copy:
+     src: ./selinuxtest.sh
+     dest: /opt/xymon/ext/
+     mode: 0750
+     owner: xymon
+     group: xymon
+
+  - copy:
+     src: ./uvscantest.sh
+     dest: /opt/xymon/ext/
+     mode: 0750
+     owner: xymon
+     group: xymon
+
+  - copy:
+     src: ./xymonrestart.sh
+     dest: /etc/cron.daily/
+     mode: 0750
+     owner: root
+     group: root

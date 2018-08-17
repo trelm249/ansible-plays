@@ -1,0 +1,15 @@
+#######
+#Filename: removeaccm.yml
+#Description: Removes the McAfee ACCM agent
+#Author: Trae Elmore
+#######
+
+- name: remove the deprecated McAfee ACCM agent from linux hosts
+  hosts: 
+
+  tasks:
+
+  - name: "Remove the accm rpm"
+    package:
+      name=ACCM
+      state=absent

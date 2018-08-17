@@ -1,0 +1,22 @@
+---
+#this playbook copies over the files for stigging oracle jre1.8 linux systems.
+- name: apply the oracle jre 1.8 stig
+  hosts: storm havok odin kratos beast rook phoenix wolverine abyss dd-001 dd-002 alpha-las1 loki seeker juggernaut colossus
+  remote_user: nimdax
+
+  tasks:
+  - file :
+     path: /etc/.java/deployment/
+     state: directory
+
+  - copy:
+     src: /home/nimdax/bin/javastig/deployment.properties
+     dest: /etc/.java/deployment/
+     mode: 640
+
+  - copy:
+     src: /home/nimdax/bin/javastig/deployment.config
+     dest: /etc/.java/deployment/
+     mode: 640
+
+

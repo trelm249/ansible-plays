@@ -1,0 +1,16 @@
+---
+#this playbook copies over the stig.json file for chrome linux systems.
+- name: apply the chrome stig
+  hosts: storm havok odin kratos beast phoenix loki seeker juggernaut colossus
+  remote_user: nimdax
+
+  tasks:
+  - file :
+     path: /etc/opt/chrome/policies/managed
+     state: directory
+
+  - copy:
+     src: /home/nimdax/bin/chromestig/stig.json
+     dest: /etc/opt/chrome/policies/managed/
+     mode: 644
+
