@@ -1,0 +1,70 @@
+---
+#######
+#Filename: setup-rsyslog-server.yml
+#Description: Ansible playbook to setup the next generation rsyslog server for the enclave
+#Author: Trae Elmore
+#######
+
+- name: install rsyslog and setup server for centralized rsyslog and audit log
+  hosts: some-ansible-client
+
+  tasks:
+
+  - name: "Ensure rsyslog is installed"
+    package:
+      name="{{item}}"
+      state=present
+    with_items:
+      - rsyslog
+
+  - name: "Ensure rsyslog-gnutls is installed"
+    package:
+      name="{{item}}"
+      state=present
+    with_items:
+      - rsyslog-gnutls
+
+  - name: "Ensure gnutls-utils is installed"
+    package:
+      name="{{item}}"
+      state=present
+    with_items:
+      - gnutls-utils
+
+
+  - name: "Ensure audit is installed"
+    package:
+      name="{{item}}"
+      state=present
+    with_items:
+      - audit
+
+  - name: "remove audispd-plugins"
+    package:
+      name="{{item}}"
+      state=absent
+    with_items:
+      - audispd-plugins
+
+  - name: Copy over the rsyslog.conf file
+    copy:
+      src: './rsyslog.conf'
+      dest: '/etc/rsyslog.conf'
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: enable auditd stream to rsyslog
+    lineinfile:
+      path: /etc/audisp/plugins.d/syslog.conf
+      regexp: '^active = no'
+      line: 'active = yes'
+
+  - name: Enable service rsyslog
+    service:
+      name="{{item}}"
+      enabled="yes"
+      state="restarted"
+    with_items:
+      - rsyslog
+
