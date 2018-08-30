@@ -1,0 +1,24 @@
+---
+- name: poweron libvirt guests
+  hosts: localhost
+
+  tasks:
+    - name: start libvirtd
+      service: name=libvirtd state=started enabled=yes
+      register: libvirtd
+
+    - name: wait for libvirtd to be resident
+      pause: seconds=20
+      when: libvirtd.changed
+
+    - name: get list of vms
+      shell: virsh list --all |awk 'NR > 2 {print $2}'
+      register: kvm_guests
+
+    - name: get vm info
+      virt: command=info
+      register: virt_info
+
+    - name: power on vms 
+      virt: name={{kvm_guests.stdout}} command=start
+      when: virt_info[kvm_guests.stdout]['state'] != 'running'
