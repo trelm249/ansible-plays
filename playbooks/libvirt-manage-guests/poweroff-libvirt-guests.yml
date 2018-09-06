@@ -1,16 +1,15 @@
 ---
-- name: poweron libvirt guests
+- name: poweroff libvirt guests
   hosts: localhost
 
   tasks:
-    - name: get list of vms
-      shell: virsh list --all |awk 'NR > 2 {print $2}'
-      register: kvm_guests
-
     - name: get vm info
       virt: command=info
       register: virt_info
 
-    - name: power on vms 
-      virt: name={{kvm_guests.stdout}} command=shutdown
-      when: virt_info[kvm_guests.stdout]['state'] != 'shutdown'
+    - name: power off vms 
+      virt: name={{item}} command=shutdown
+      when: virt_info[item]['state'] != 'shutdown'
+      with_items:
+         - fjb
+         - fserver1
