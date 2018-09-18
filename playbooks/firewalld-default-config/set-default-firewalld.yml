@@ -1,0 +1,34 @@
+#this playbook sets up the default firewalld config for the environment.
+- name: apply the default firewalld config
+  hosts: {{ hostgroup }}
+
+- firewalld:
+    zone: work
+    permanent: true
+    source: 192.168.5.0/24
+    state: enabled
+
+- firewalld:
+    zone: work
+    permanent: true
+    source: 192.168.7.0/24
+    state: enabled
+
+- firewalld:
+    zone: work
+    permanent: true
+    source: 192.168.10.0/24
+    state: enabled
+
+- firewalld:
+    zone: work
+    permanent: true
+    source: 192.168.10.0/24
+    state: enabled
+
+- firewalld:
+    zone: drop
+    permanent: true
+    interface: ens192 
+    state: enabled
+
