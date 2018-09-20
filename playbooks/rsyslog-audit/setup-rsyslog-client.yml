@@ -92,6 +92,9 @@
       regexp: '^active = no'
       line: 'active = yes'
 
+  - name: Restore file selinux context on certs
+    command: 'restorecon -Rv /etc/pki/rsyslog'
+
   - name: Enable service rsyslog
     service:
       name="{{item}}"
