@@ -2,7 +2,6 @@
 #this playbook sets up the xymon client for el7 linux systems.
 - name: setup the xymon client
   hosts: some-linux-host
-  remote_user: nimdax
 
   tasks:
 

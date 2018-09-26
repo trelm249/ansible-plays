@@ -1,7 +1,7 @@
 ---
 #this playbook hits all hosts runs the local sar report script and fetches it.
 - name: run and retrieve the EOM SAR report from all hosts
-  hosts: all-linux
+  hosts: {{ targets }}
   remote_user: some-user
 
   tasks:

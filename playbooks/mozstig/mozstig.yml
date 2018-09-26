@@ -1,8 +1,7 @@
 ---
 #this playbook copies over the files for stigging firefox linux systems.
 - name: apply the firefox stig
-  hosts: storm havok odin kratos beast rook phoenix wolverine abyss dd-001 dd-002 alpha-las1 loki seeker juggernaut colossus
-  remote_user: nimdax
+  hosts: {{ targets }} 
 
   tasks:
   - file :

@@ -1,8 +1,7 @@
 ---
 #this playbook copies over the stig.json file for chrome linux systems.
 - name: apply the chrome stig
-  hosts: storm havok odin kratos beast phoenix loki seeker juggernaut colossus
-  remote_user: nimdax
+  hosts: {{ targets }} 
 
   tasks:
   - file :

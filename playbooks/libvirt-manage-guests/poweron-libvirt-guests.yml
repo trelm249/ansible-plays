@@ -28,3 +28,4 @@
       with_items:
            - fjb
            - fserver1
+           - splunk1

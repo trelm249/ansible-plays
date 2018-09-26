@@ -5,7 +5,7 @@
 #######
 
 - name: Update McAfee EPO agent on linux hosts
-  hosts: tyrell hercule alpha-db alpha-db2 eagle loki lobo
+  hosts: {{ targets }} 
 
   tasks:
 
