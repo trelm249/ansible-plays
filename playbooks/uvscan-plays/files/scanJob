@@ -1,0 +1,8 @@
+
+-c
+-r
+-m /root/quarantine
+--exclude /usr/local/VS/excludeList
+--xmlpath /var/log/VS_results.xml
+--summary
+--report /var/log/uvscan-$(hostname)-$(date +%F).log

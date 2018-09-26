@@ -1,0 +1,8 @@
+/dev/*
+/selinux/*
+/proc/*
+/sys/*
+/var/spool/*
+/var/run/*
+/run/*
+/CDS/*

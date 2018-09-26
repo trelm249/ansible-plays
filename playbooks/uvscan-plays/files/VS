@@ -1,0 +1,17 @@
+#!/bin/bash
+## Scripts uvscan to run and generate an email based on results.
+
+/usr/local/bin/uvscan --load /root/scripts/VS/scanJob /*
+
+recip="root"
+
+case $? in
+            0) echo "VS Complete. No issues." | mail -s "VS Complete." "$recip";;
+            2) echo "Error. DAT failure." | mail -s "VS Error." "$recip";;
+            6) echo "General VS error." | mail -s "VS Error." "$recip";;
+            8) echo "DAT file missing." | mail -s "VS Error." "$recip";;
+            12) echo "Virus detected\!" | mail -s "VS Alert\!" "$recip";;
+            13) echo "Malicious file detected\!" | mail -s "VS Alert\!" "$recip";;
+            19) echo "Infected file found and cleaned\!" | mail -s "VS Alert\!" "$recip";;
+esac
+

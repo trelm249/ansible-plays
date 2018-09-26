@@ -1,0 +1,78 @@
+---
+
+- name: install uvscan on a linux system
+  hosts: {{ target }}
+
+  tasks:
+  - file:
+     path: /usr/local/uvscan
+     state: directory
+     mode: 0755
+
+  - file:
+     path: /root/quarantine
+     state: directory
+
+  - name: copy over the uvscan tarball
+    unarchive:
+     copy: yes
+     src: ./files/CM-215993-vscl-l64-610-l.tar.gz
+     dest: /usr/local/uvscan/
+
+  - name: install the uvscan application
+    command: /usr/local/uvscan/install-uvscan -y /usr/local/uvscan
+
+  - file:
+     path: /usr/local/VS
+     state: directory
+
+  - copy:
+     src: ./files/excludeList
+     dest: /usr/local/VS/
+
+  - copy:
+     src: ./files/scanJob
+     dest: /usr/local/VS/
+
+  - copy:
+     src: ./files/VS
+     dest: /usr/local/VS/
+     mode: 0755
+
+  - copy: 
+     src: ./files/getnewdat.sh
+     dest: /usr/local/VS/
+     mode: 0755
+
+  - name: update crontab
+    lineinfile:
+     path: /etc/crontab
+     line: '#Antivirus DAT file updates'
+     state: present
+
+  - lineinfile:
+     path: /etc/crontab
+     line: '00 22 * * tue,fri root /usr/local/VS/getnewdat.sh'
+     state: present
+
+  - lineinfile:
+     path: /etc/crontab
+     line: '#VIRUS SCAN: Runs @ 11:30pm daily, generates report in /var/log/'
+     state: present
+
+  - lineinfile:
+     path: /etc/crontab
+     line: '30 23 * * 0-6 root /usr/local/VS/VS'
+     state: present
+
+  - file:
+     path: /usr/local/uvscan/CM-215993-vscl-l64-610-l.tar.gz
+     state: absent
+
+  - package:
+     name: elinks
+     state: latest
+
+  - name: update DAT files
+    command: /usr/local/VS/getnewdat.sh
+
