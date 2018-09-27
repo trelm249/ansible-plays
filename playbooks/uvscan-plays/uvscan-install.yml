@@ -69,6 +69,13 @@
      path: /usr/local/uvscan/CM-215993-vscl-l64-610-l.tar.gz
      state: absent
 
+  - copy:
+     src: ./files/uvscan
+     dest: /etc/logrotate.d/
+     mode: 0644
+     owner: root
+     group: root
+
   - package:
      name: elinks
      state: latest
