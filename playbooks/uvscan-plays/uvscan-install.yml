@@ -1,7 +1,7 @@
 ---
 
 - name: install uvscan on a linux system
-  hosts: sandbox
+  hosts: targets
 
   tasks:
   - file:
