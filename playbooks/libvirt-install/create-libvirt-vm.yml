@@ -3,7 +3,7 @@
   hosts: localhost
 
   tasks:
-  - name: create vm
+  - name: create fedora vm
     command: virt-install -n '{{ vm_name }}'
              -r 1000
              --vcpus 1
@@ -13,3 +13,19 @@
              --initrd-inject=/var/lib/libvirt/images/isos/fserver.cfg
              --extra-args="ks=file:/fserver.cfg"
              --disk pool=default,size=40
+    when:
+      '{{ vm_os }}' == 'fedora'
+
+  - name: create centos vm
+    command:tall -n '{{ vm_name }}'
+             -r 1000
+             --vcpus 1
+             --location=/var/lib/libvirt/images/isos/c7server.iso
+             --os-type linux
+             --network network=sandbox
+             --initrd-inject=/var/lib/libvirt/images/isos/c7server.cfg
+             --extra-args="ks=file:/c7server.cfg"
+             --disk pool=default,size=40
+    when:
+      '{{ vm_os }}' == 'centos'
+
