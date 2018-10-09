@@ -13,11 +13,10 @@
              --initrd-inject=/var/lib/libvirt/images/isos/fserver.cfg
              --extra-args="ks=file:/fserver.cfg"
              --disk pool=default,size=40
-    when:
-      '{{ vm_os }}' == 'fedora'
+    when: vm_os == 'fedora'
 
   - name: create centos vm
-    command:tall -n '{{ vm_name }}'
+    command: virt-install -n '{{ vm_name }}'
              -r 1000
              --vcpus 1
              --location=/var/lib/libvirt/images/isos/c7server.iso
@@ -26,6 +25,5 @@
              --initrd-inject=/var/lib/libvirt/images/isos/c7server.cfg
              --extra-args="ks=file:/c7server.cfg"
              --disk pool=default,size=40
-    when:
-      '{{ vm_os }}' == 'centos'
+    when: vm_os == 'centos'
 
