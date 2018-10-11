@@ -6,7 +6,7 @@
 #######
 
 - name: install rsyslog and setup server for centralized rsyslog and audit log
-  hosts: some-ansible-client
+  hosts: splunk1
 
   tasks:
 
@@ -16,21 +16,9 @@
       state=present
     with_items:
       - rsyslog
-
-  - name: "Ensure rsyslog-gnutls is installed"
-    package:
-      name="{{item}}"
-      state=present
-    with_items:
       - rsyslog-gnutls
-
-  - name: "Ensure gnutls-utils is installed"
-    package:
-      name="{{item}}"
-      state=present
-    with_items:
       - gnutls-utils
-
+      - bind-utils
 
   - name: "Ensure audit is installed"
     package:
@@ -45,6 +33,47 @@
       state=absent
     with_items:
       - audispd-plugins
+
+  - copy:
+     src: ca.tmpl
+     dest: /etc/pki/rsyslog/
+     mode: 0640
+     owner: root
+     group: root
+
+  - name: generate a private CA
+    command: "certtool --generate-privkey --outfile /etc/pki/rsyslog/ca-key.pem --sec-param High"
+
+  - copy:
+     src: serv.tmpl
+     dest: /etc/pki/rsyslog/
+     mode: 0640
+     owner: root
+     group: root
+
+  - copy:
+     src: create-serv-cert.sh
+     dest: /etc/pki/rsyslog/
+     mode: 0700
+     owner: root
+     group: root
+
+  - copy:
+     src: remotelogs
+     dest: /etc/logrotate.d/
+     mode: 0640
+     owner: root
+     group: root
+
+
+  - name: generate a private CA
+    command: "certtool --generate-self-signed --load-privkey /etc/pki/rsyslog/ca-key.pem --template /etc/pki/rsyslog/ca.tmpl --outfile /etc/pki/rsyslog/ca-cert.pem"
+
+  - name: generate server cert
+    command: "/etc/pki/rsyslog/create-serv-cert.sh"
+
+  - name: restore selinux file contexts
+    command: "restorecon -R /etc/"
 
   - name: Copy over the rsyslog.conf file
     copy:
@@ -67,4 +96,13 @@
       state="restarted"
     with_items:
       - rsyslog
+
+  - name: Cleanup
+    file:
+      path: /etc/pki/rsyslog/{{item}}
+      state: absent
+    with_items:
+      - ca.tmpl
+      - serv.tmpl
+      - create-serv-cert.sh
 

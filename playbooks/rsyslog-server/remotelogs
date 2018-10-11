@@ -1,0 +1,13 @@
+#rotate rule for remote logs
+
+/var/log/rsyslog/*/*.log {
+compress
+missingok
+rotate 99
+create 0640 root splunk
+sharedscripts
+    postrotate
+        /usr/bin/systemctl kill -s HUP rsyslog.service >/dev/null 2>&1 || true
+    endscript
+}
+

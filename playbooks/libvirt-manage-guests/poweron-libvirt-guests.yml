@@ -26,6 +26,7 @@
       virt: name={{item}} command=start
       when: virt_info[item]['state'] != 'running'
       with_items:
-           - fjb
+           - fjb 
            - fserver1
            - splunk1
+           - test22
