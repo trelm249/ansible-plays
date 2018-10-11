@@ -6,7 +6,7 @@
 #######
 
 - name: install rsyslog and setup server for centralized rsyslog and audit log
-  hosts: splunk1
+  hosts: rsyslog1
 
   tasks:
 
