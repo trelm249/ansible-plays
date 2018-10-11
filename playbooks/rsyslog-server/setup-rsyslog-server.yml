@@ -106,3 +106,8 @@
       - serv.tmpl
       - create-serv-cert.sh
 
+  - name: add syslog to the host firewall rules
+    firewalld:
+      service: syslog
+      permanent: yes
+      state: enabled
