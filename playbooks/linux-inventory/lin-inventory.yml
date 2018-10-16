@@ -1,0 +1,25 @@
+---
+#this playbook hits all hosts runs the local inventory report script and fetches it.
+- name: run and retrieve the inventory report from all hosts
+  hosts: sandbox
+
+  tasks:
+  - name: copy the inventory file over if it is updated
+    file:
+      src: inventory.sh
+      dest: /usr/local/bin/
+      mode: 0755
+      owner: root
+      group: root
+
+  - name: run the inventory script and write the output to a file
+    shell: rm *.inventory.*; /usr/local/bin/inventory.sh |tee -a ~/{{ inventory_hostname }}.inventory.$(date +%F).log
+
+  - shell: (cd /home/some-user/; find . -maxdepth 1 -type f) |grep inventory |cut -d '/' -f2 
+    register: files_to_copy
+
+  - fetch:
+     src: /home/nimdax/{{ files_to_copy.stdout }}
+     dest: /var/www/html/pub/inventory/
+     flat: yes
+
