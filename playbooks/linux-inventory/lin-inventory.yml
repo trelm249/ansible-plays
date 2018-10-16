@@ -5,21 +5,33 @@
 
   tasks:
   - name: copy the inventory file over if it is updated
-    file:
+    copy:
       src: inventory.sh
       dest: /usr/local/bin/
       mode: 0755
       owner: root
       group: root
 
-  - name: run the inventory script and write the output to a file
-    shell: rm *.inventory.*; /usr/local/bin/inventory.sh |tee -a ~/{{ inventory_hostname }}.inventory.$(date +%F).log
+  - copy:
+     src: get-inventory.sh
+     dest: /usr/local/bin/
+     mode: 0755
+     owner: root
+     group: root
 
-  - shell: (cd /home/some-user/; find . -maxdepth 1 -type f) |grep inventory |cut -d '/' -f2 
+  - command: "restorecon -R /usr/local/bin"
+
+  - shell: "touch t-inventory-t.log;rm *-inventory-*.log"
+
+  - name: run the inventory script and write the output to a file
+    command: "/usr/local/bin/get-inventory.sh"
+
+  - shell: "find . -maxdepth 1 -type f |grep inventory |cut -d '/' -f2 "
     register: files_to_copy
 
   - fetch:
-     src: /home/nimdax/{{ files_to_copy.stdout }}
+     src: ~/{{ files_to_copy.stdout }}
      dest: /var/www/html/pub/inventory/
+     mode: 0644
      flat: yes
 
