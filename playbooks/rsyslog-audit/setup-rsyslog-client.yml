@@ -97,9 +97,9 @@
 
   - name: Enable service rsyslog
     service:
-      name="{{item}}"
-      enabled="yes"
-      state="restarted"
+      name: "{{item}}"
+      enabled: "yes"
+      state: "restarted"
     with_items:
       - rsyslog
 
