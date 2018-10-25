@@ -1,0 +1,153 @@
+---
+#######
+##Filename: build-pulp.yml
+##Description: Ansible playbook to setup the environment pulp server
+##Author: Trae Elmore
+########
+
+- name: Install the pulp server application to a server for the environment
+  hosts: mrepo1
+
+  tasks:
+
+  - name: Add the epel yum repo for RedHat or CentOS 7
+    command: 'rpm -i http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
+    when:
+        ansible_distribution == 'CentOS'
+        or
+        ansible_distribution == 'RedHat'
+        and
+        ansible_distribution_major_version == '7'
+
+  - name: Add the pulp yum repo for RedHat or CentOS 7
+    command: 'curl https://repos.fedorapeople.org/repos/pulp/pulp/rhel-pulp.repo -o /etc/yum.repos.d/rhel-pulp.repo'
+    when:
+        ansible_distribution == 'CentOS'
+        or
+        ansible_distribution == 'RedHat'
+        and
+        ansible_distribution_major_version == '7'
+
+  - name: add services to the host firewall rules
+    firewalld:
+      service: "{{item}}"
+      permanent: yes
+      state: enabled
+    with_items:
+      - http
+      - https
+
+  - name: add ports to the host firewall rules
+    firewalld:
+      port: "{{item}}"
+      permanent: yes
+      state: enabled
+    with_items:
+      - 5671/tcp
+      - 5672/tcp
+
+  - name: "Install the packages for the database"
+    package:
+      name: "{{item}}"
+      state: present
+    with_items:
+      - httpd
+      - mongodb-server
+
+  - name: Enable service mongod
+    service:
+      name: "{{item}}"
+      enabled: "yes"
+      state: "restarted"
+    with_items:
+      - mongod
+
+  - name: "Install the packages for the message bus"
+    package:
+      name: "{{item}}"
+      state: present
+    with_items:
+      - qpid-cpp-server
+      - qpid-cpp-server-linearstore
+
+  - name: Enable service qpidd
+    service:
+      name: "{{item}}"
+      enabled: "yes"
+      state: "restarted"
+    with_items:
+      - qpidd
+
+  - name: "Install the packages for pulp server"
+    package:
+      name: "{{item}}"
+      state: present
+    with_items:
+      - pulp-server
+      - python-gofer-qpid
+      - python2-qpid
+      - qpid-tools
+      - pulp-rpm-plugins
+      - pulp-docker-plugins
+
+  - name: "generate the pulp ssl key"
+    command: 'pulp-gen-key-pair'
+
+  - name: "generate the pulp ssl certificate"
+    command: 'pulp-gen-ca-certificate'
+
+  - name: "Initialize the database"
+    command: 'sudo -u apache pulp-manage-db'
+
+  - name: update the httpd ssl configuration
+    lineinfile:
+      path: /etc/httpd/conf.d/ssl.conf
+      regexp: '^SSLProtocol all -SSLv3'
+      line: 'SSLProtocol -all +TLSv1.2'
+
+  - name: update the httpd ssl configuration
+    lineinfile:
+      path: /etc/httpd/conf.d/ssl.conf
+      regexp: '^SSLProtocolProtocol all -SSLv3'
+      line: 'SSLProtocol -all +TLSv1.2'
+
+  - name: Enable service httpd
+    service:
+      name: "{{item}}"
+      enabled: "yes"
+      state: "restarted"
+    with_items:
+      - httpd
+
+  - name: Enable the celery distributed task system
+    service:
+      name: "{{item}}"
+      enabled: "yes"
+      state: "restarted"
+    with_items:
+      - pulp_workers
+
+  - name: Enable Celerybeat and Resource Manager
+    service:
+      name: "{{item}}"
+      enabled: "yes"
+      state: "restarted"
+    with_items:
+      - pulp_celerybeat
+      - pulp_resource_manager
+
+  - name: "Install the packages for the admin client"
+    package:
+      name: "{{item}}"
+      state: present
+    with_items:
+      - pulp-admin-client
+      -  pulp-rpm-admin-extensions
+      -  pulp-docker-admin-extensions
+
+  - name: update the admin configuration
+    lineinfile:
+      path: /etc/httpd/conf.d/ssl.conf
+      regexp: '^#host:'
+      line: 'host: localhost'
+
