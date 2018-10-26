@@ -39,7 +39,7 @@ For Fedora, the packages are in the regular distro.
 `sudo -u apache pulp-manage-db`  
 
 **Apache considerations**  
-> Pulp best practice is that the web server only serves Pulp. Also, use tls 1.2 are better for communication in mod_ssl. Practice secure web connectivity for clients.  
+> Pulp best practice is that the web qserver only serves Pulp. Also, use tls 1.2 are better for communication in mod_ssl. Practice secure web connectivity for clients.  
 `SSLProtocol -all +TLSv1.2` 
 `sudo systemctl enable httpd`  
 `sudo systemctl start httpd`
