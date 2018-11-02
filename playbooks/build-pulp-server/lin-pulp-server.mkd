@@ -61,3 +61,6 @@ For Fedora, the packages are in the regular distro.
 Update the /etc/pulp/admin/admin.conf with -  
 `host = localhost.localhost`  
 
+## To restart all of Pulp's services on the server.  
+`sudo systemctl restart httpd pulp_workers pulp_resource_manager pulp_celerybeat`  
+

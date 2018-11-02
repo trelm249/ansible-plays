@@ -6,7 +6,7 @@
 ########
 
 - name: Install the pulp server application to a server for the environment
-  hosts: mrepo1
+  hosts: pulp1
 
   tasks:
 
