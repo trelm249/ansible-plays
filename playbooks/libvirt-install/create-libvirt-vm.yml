@@ -24,6 +24,6 @@
              --network network=sandbox
              --initrd-inject=/var/lib/libvirt/images/isos/c7server.cfg
              --extra-args="ks=file:/c7server.cfg"
-             --disk pool=default,size=100
+             --disk pool=default,size=40
     when: vm_os == 'centos'
 

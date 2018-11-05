@@ -33,6 +33,7 @@
       service: "{{item}}"
       permanent: yes
       state: enabled
+i     zone: work
     with_items:
       - http
       - https
@@ -42,6 +43,7 @@
       port: "{{item}}"
       permanent: yes
       state: enabled
+      zone: work
     with_items:
       - 5671/tcp
       - 5672/tcp

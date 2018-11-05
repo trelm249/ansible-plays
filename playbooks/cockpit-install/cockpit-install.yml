@@ -1,0 +1,29 @@
+---
+#######
+##Filename: cockpit-install.yml
+##Description: Ansible playbook to install and enable cockpit
+##Author: Trae Elmore
+########
+
+- name: Install and enable cockpit for monitoring and management
+  hosts: sandbox
+
+  tasks:
+
+  - name: Ensure cockpit is installed
+    package:
+      name: cockpit
+      state: present
+
+  - name: add cockpit to the host firewall rules
+    firewalld:
+      zone: work
+      service: cockpit
+      permanent: yes
+      state: enabled
+
+  - name: Enable and Start Cockpit
+    systemd:
+     name: cockpit.socket
+     enabled: true
+     state: started

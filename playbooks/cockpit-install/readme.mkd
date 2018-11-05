@@ -1,0 +1,3 @@
+###Install and enable cockpit
+
+> Assumes a recent fedora or redhat derived OS.
