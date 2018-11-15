@@ -84,13 +84,7 @@
      owner: root
      group: root
 
-  - copy:
-     src: "{{item}}"
-     dest: /var/lib/tftpboot/networkboot/fedora/
-     mode: 0640
-    with_items:
-     - ./pxe-images/vmlinuz
-     - ./pxe-images/initrd.img
+  - shell: "curl -4 https://ewr.edge.kernel.org/fedora-buffet/fedora/linux/releases/29/Everything/x86_64/os/images/pxeboot/{vmlinuz,initrd.img} -o /var/lib/tftpboot/networkboot/fedora/{vmlinuz,initrd.img}"
 
   - copy:
      src: "{{item}}"
