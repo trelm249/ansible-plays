@@ -33,7 +33,7 @@
       service: "{{item}}"
       permanent: yes
       state: enabled
-i     zone: work
+      zone: work
     with_items:
       - http
       - https
