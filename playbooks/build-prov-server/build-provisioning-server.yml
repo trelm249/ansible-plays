@@ -7,7 +7,7 @@
 ########
 
 - name: Setup the provisioning server for the environment
-  hosts: pulp1
+  hosts: prov1
 
   tasks:
 
