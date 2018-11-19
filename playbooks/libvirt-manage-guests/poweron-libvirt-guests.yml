@@ -2,9 +2,6 @@
 - name: poweron libvirt guests
   hosts: localhost
 
-#  vars_files:
-#    - vars/instances.yml
-
   tasks:
     - name: start libvirtd
       service: name=libvirtd state=started enabled=yes
