@@ -27,3 +27,15 @@
              --disk pool=default,size=40
     when: vm_os == 'centos'
 
+  - name: create ubuntu vm
+    command: virt-install -n '{{ vm_name }}'
+             -r 2000
+             --vcpus 1
+             --location=/var/lib/libvirt/images/isos/bbserver.iso
+             --os-type linux
+             --network network=sandbox
+             --initrd-inject=/var/lib/libvirt/images/isos/bbserver.cfg
+             --extra-args="ks=file:/bbserver.cfg"
+             --disk pool=default,size=40
+    when: vm_os == 'ubuntu'
+
