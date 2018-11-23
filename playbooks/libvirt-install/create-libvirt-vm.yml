@@ -9,6 +9,7 @@
              --vcpus 1
              --location=/var/lib/libvirt/images/isos/fserver.iso
              --os-type linux
+             --os-variant fedora26
              --network network=sandbox
              --initrd-inject=/var/lib/libvirt/images/isos/fserver.cfg
              --extra-args="ks=file:/fserver.cfg"
@@ -21,21 +22,11 @@
              --vcpus 1
              --location=/var/lib/libvirt/images/isos/c7server.iso
              --os-type linux
+             --os-variant rhel7
              --network network=sandbox
              --initrd-inject=/var/lib/libvirt/images/isos/c7server.cfg
              --extra-args="ks=file:/c7server.cfg"
              --disk pool=default,size=40
     when: vm_os == 'centos'
 
-  - name: create ubuntu vm
-    command: virt-install -n '{{ vm_name }}'
-             -r 2000
-             --vcpus 1
-             --location=/var/lib/libvirt/images/isos/bbserver.iso
-             --os-type linux
-             --network network=sandbox
-             --initrd-inject=/var/lib/libvirt/images/isos/bbserver.cfg
-             --extra-args="ks=file:/bbserver.cfg"
-             --disk pool=default,size=40
-    when: vm_os == 'ubuntu'
 
