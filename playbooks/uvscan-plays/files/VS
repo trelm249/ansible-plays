@@ -1,0 +1,23 @@
+#!/bin/bash
+## Scripts uvscan to run and generate an email based on results.
+
+/usr/local/bin/uvscan --load /usr/local/VS/scanJob --report=/var/log/uvscan-$(hostname)-$(date +%F).log /*
+
+recip="root"
+
+case $? in
+            0) echo "VS Complete. No issues." | mail -s "VS Complete." "$recip";;
+            2) echo "Error. DAT failure." | mail -s "VS Error." "$recip";;
+            6) echo "General VS error." | mail -s "VS Error." "$recip";;
+            8) echo "DAT file missing." | mail -s "VS Error." "$recip";;
+            12) echo "Virus detected\!" | mail -s "VS Alert\!" "$recip";;
+            13) echo "Malicious file detected\!" | mail -s "VS Alert\!" "$recip";;
+            19) echo "Infected file found and cleaned\!" | mail -s "VS Alert\!" "$recip";;
+esac
+
+cenforce=$(/usr/sbin/getenforce 2>/dev/null | tr -d '\r' )
+cscanver=$(cat /var/log/uvscan-$(hostname)-$(date +%F).log |head -1 |awk '{print $8}' 2>/dev/null |tr -d '\r')
+cdat=$(cat /var/log/uvscan-$(hostname)-$(date +%F).log |grep -i "dat set" |sed 's/[[:alpha:]]//g' |sed 's/[[:punct:]]//g' | tr -s ' ' |sed 's/ //' | tr ' ' ':' | cut -d : -f 1 ; 2>/dev/null | tr -d '\r')
+cscan=$(head /var/log/uvscan-$(hostname)-$(date +%F).log |grep ^$(date +%Y))
+
+echo "$HOSTNAME, SELinux Status $cenforce,$cscanver, DAT File Version $cdat, Date of Last UVScan $cscan" |logger
