@@ -1,8 +1,16 @@
 ---
-- name: push configuration files and scripts to comply with the DISA STIG
+- name: push configuration files and scripts to comply with the DISA STIG for RHEL
   hosts: fcon-n2
 
   tasks:
+ - name: "Ensure packages are installed"
+   package:
+     name: "{{item}}"
+     state: present
+   with_items:
+     - vlock
+
+
   - name: copy over the script to remove old logs and empty files from var
     copy:
       src: ./utils/purge-old-files.sh
@@ -49,6 +57,10 @@
     with_items:
       - ./profiled/stig-timeout.sh
       - ./profiled/stig-timeout.csh
+      - ./profiled/stig-umask.sh
+      - ./profiled/stig-timeout.csh
+      - ./profiled/vlock-alias.sh
+      - ./profiled/vlock-alias.csh
     tags:
       - stig-timeout
       - etc
