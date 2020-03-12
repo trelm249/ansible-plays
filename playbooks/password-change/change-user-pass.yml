@@ -1,0 +1,15 @@
+---
+# A playbook to change a user password
+- name: change a user password
+  hosts: {{Some_Host}}
+  gather_facts: no
+  vars_files:
+    - passvalue.yml
+
+  tasks:
+  - name: Change a user password
+    user:
+      name: "{{User_Account}}"
+      password: "{{Password_Hash}}"
+      update_password: always
+...         
