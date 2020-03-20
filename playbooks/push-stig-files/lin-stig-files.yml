@@ -49,7 +49,7 @@
       - stig-banner
       - etc
 
-  - name: copy over the DISA shell session timeout for Command Line
+  - name: copy over the DISA shell session parameters for Command Line
     copy:
       src: "{{item}}"
       dest: /etc/profile.d/
@@ -67,8 +67,32 @@
       - stig-timeout
       - etc
 
-  - command: "restorecon -R /etc"
+  - name: Configure SSH daemon
+    copy:
+      src: ./ssh/sshd_config
+      dest: /etc/ssh/
+      mode: 0644
+      owner: root
+      group: root
+      tags:
+        - etc
+        - ssh-config  
+
+  - name: Reset SE Linux File Context on the etc directory structructure
+    command: "restorecon -R /etc"
     tags:
       - utils
       - etc
+
+  - name: Restart Services
+    service:
+      name: "{{item}}"
+      enabled: "yes"
+      state: "restarted"
+    with_items:
+      - sshd
+    tags:
+      - etc
+      - ssh-config
 ...
+
