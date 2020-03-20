@@ -9,6 +9,8 @@
      state: present
    with_items:
      - vlock
+     - audit
+     - audispd-plugins
    tags:
      - etc
      - packages  
@@ -67,6 +69,31 @@
         - etc
         - ssh-config  
 
+ - name: Configure Audit daemon
+   copy:
+     src: ./audit/auditd.conf
+     dest: /etc/audit/
+     mode: 0640
+     owner: root
+     group: root
+   tags:
+     - etc
+     - stig-audit
+
+  - name: Confiure Audit Rules
+    copy:
+      src: ./audit/audit.rules
+      dest: "{{item}}"
+      mode: 0640
+      owner: root
+      group: root
+    with_items:
+      - /etc/audit/rules.d/
+      - /etc/audit/
+    tags:
+      - etc
+      - stig-audit
+
   - name: Reset SE Linux File Context on the etc directory structructure
     command: "restorecon -R /etc"
     tags:
@@ -80,6 +107,7 @@
       state: "restarted"
     with_items:
       - sshd
+      - auditd
     tags:
       - etc
       - ssh-config
