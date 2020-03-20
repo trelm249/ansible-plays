@@ -1,17 +1,17 @@
 ---
 - name: push configuration files and scripts to comply with the DISA STIG for RHEL 7
-  hosts: {{RHEL7 Hosts}}
+  hosts: "{{R7HOSTS}}"
 
   tasks:
- - name: "Ensure packages are installed"
-   package:
+  - name: "Ensure packages are installed"
+    package:
      name: "{{item}}"
      state: present
-   with_items:
+    with_items:
      - vlock
      - audit
      - audispd-plugins
-   tags:
+    tags:
      - etc
      - packages  
 
@@ -62,29 +62,29 @@
     copy:
       src: ./ssh/sshd_config
       dest: /etc/ssh/
-      mode: 0644
+      mode: 0600
       owner: root
       group: root
-      tags:
+    tags:
         - etc
         - ssh-config  
 
- - name: Configure Audit daemon
-   copy:
-     src: ./audit/auditd.conf
-     dest: /etc/audit/
-     mode: 0640
-     owner: root
-     group: root
-   tags:
-     - etc
-     - stig-audit
+  - name: Configure Audit daemon
+    copy:
+      src: ./audit/auditd.conf
+      dest: /etc/audit/
+      mode: 0600
+      owner: root
+      group: root
+    tags:
+      - etc
+      - stig-audit
 
   - name: Confiure Audit Rules
     copy:
       src: ./audit/audit.rules
       dest: "{{item}}"
-      mode: 0640
+      mode: 0600
       owner: root
       group: root
     with_items:
@@ -107,7 +107,6 @@
       state: "restarted"
     with_items:
       - sshd
-      - auditd
     tags:
       - etc
       - ssh-config
