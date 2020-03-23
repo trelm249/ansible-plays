@@ -96,7 +96,7 @@
 
   - name: Configure Sysctl Securit Limits
     copy:
-      src: ./modprobe/limits.conf
+      src: ./modprob/limits.conf
       dest: /etc/security/
       mode: 0640
       owner: root
@@ -106,27 +106,25 @@
       - stig-sysctl    
 
   - name: Configure Sysctl Configuration
-      copy:
-        src: ./modprobe/sysctl.conf
-        dest: /etc/security/
-        mode: 0640
-        owner: root
-        group: root
-      tags:
-        - etc
-        - stig-sysctl
+    copy:
+      src: ./modprob/sysctl.conf
+      dest: /etc/security/
+      mode: 0640
+      owner: root
+      group: root
+    tags:
+      - etc
+      - stig-sysctl
 
   - name: Reload Sysctl
-    sysctl:
-      sysctl_file: /etc/sysctl.conf
-      reload: yes
+    command: "sysctl -p /etc/sysctl.conf"
     tags:
       - etc
       - stig-sysctl
   
   - name: Disable Restricted Protocols and Filesystem Modules
     copy:
-      src: ./modprobe/stig.conf
+      src: ./modprob/stig.conf
       dest: /etc/modprobe.d/
       owner: root
       group: root
@@ -141,6 +139,7 @@
       state: stopped
       enabled: no
       masked: yes
+    ignore_errors: yes
     tags:
       - stig-modprobe
       - stig-bluetooth
