@@ -94,6 +94,57 @@
       - etc
       - stig-audit
 
+  - name: Configure Sysctl Securit Limits
+    copy:
+      src: ./modprobe/limits.conf
+      dest: /etc/security/
+      mode: 0640
+      owner: root
+      group: root
+    tags:
+      - etc
+      - stig-sysctl    
+
+  - name: Configure Sysctl Configuration
+      copy:
+        src: ./modprobe/sysctl.conf
+        dest: /etc/security/
+        mode: 0640
+        owner: root
+        group: root
+      tags:
+        - etc
+        - stig-sysctl
+
+  - name: Reload Sysctl
+    sysctl:
+      sysctl_file: /etc/sysctl.conf
+      reload: yes
+    tags:
+      - etc
+      - stig-sysctl
+  
+  - name: Disable Restricted Protocols and Filesystem Modules
+    copy:
+      src: ./modprobe/stig.conf
+      dest: /etc/modprobe.d/
+      owner: root
+      group: root
+      mode: 0640
+    tags:
+      - etc
+      - stig-modprobe
+
+  - name: Disable bluetooth altogether
+    systemd:
+      name: bluetooth.service
+      state: stopped
+      enabled: no
+      masked: yes
+    tags:
+      - stig-modprobe
+      - stig-bluetooth
+        
   - name: Reset SE Linux File Context on the etc directory structructure
     command: "restorecon -R /etc"
     tags:
