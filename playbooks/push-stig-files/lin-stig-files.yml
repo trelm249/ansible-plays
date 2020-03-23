@@ -11,6 +11,8 @@
      - vlock
      - audit
      - audispd-plugins
+     - selinux-policy
+     - selinux-policy-targeted
     tags:
      - etc
      - packages  
@@ -143,6 +145,37 @@
     tags:
       - stig-modprobe
       - stig-bluetooth
+
+  - name: Ensure SELinux is enforcing targeted
+    selinux:
+      policy: targeted
+      state: enforcing
+    tags:
+      - etc
+      - stig-selinux
+
+  - name: Make the SELinux configuration immutable
+    command: "chattr +i /etc/selinux/config"
+    tags:
+      - etc
+      - stig-selinux
+
+  - name: Remove unneeded users
+    user:
+      name: "{{item}}"
+      state: absent
+      remove: yes
+    with_items:
+      - uucp
+      - sync
+      - news
+      - games
+      - gopher
+      - shutdown
+    ignore_errors: yes
+    tags:
+      - etc
+      - stig-users
         
   - name: Reset SE Linux File Context on the etc directory structructure
     command: "restorecon -R /etc"
