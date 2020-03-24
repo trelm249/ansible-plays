@@ -13,9 +13,24 @@
      - audispd-plugins
      - selinux-policy
      - selinux-policy-targeted
+     - screen
     tags:
      - etc
-     - packages  
+     - packages
+     - High  
+
+  - name: "Remove prohibited packages"
+    package:
+      name: "{{item}}"
+      state: absent
+    with_items:
+      - ypserv
+      - rsh-server
+      - telnet-server
+    tags:
+      - stig-packages
+      - High
+
 
   - name: copy over the script to check for unowned or ungrouped files
     copy:
@@ -27,6 +42,7 @@
     tags:
       - etc
       - stig-file-owner
+
 
   - name: copy over the DISA login banner for Command Line
     copy:
@@ -68,8 +84,9 @@
       owner: root
       group: root
     tags:
-        - etc
-        - ssh-config  
+      - etc
+      - ssh-config
+      - High  
 
   - name: Configure Audit daemon
     copy:
@@ -81,6 +98,7 @@
     tags:
       - etc
       - stig-audit
+      - High
 
   - name: Confiure Audit Rules
     copy:
@@ -95,6 +113,7 @@
     tags:
       - etc
       - stig-audit
+      - High
 
   - name: Configure Sysctl Securit Limits
     copy:
@@ -105,7 +124,8 @@
       group: root
     tags:
       - etc
-      - stig-sysctl    
+      - stig-sysctl
+      - Hign  
 
   - name: Configure Sysctl Configuration
     copy:
@@ -117,6 +137,7 @@
     tags:
       - etc
       - stig-sysctl
+      - High
 
   - name: Reload Sysctl
     command: "sysctl -p /etc/sysctl.conf"
@@ -153,6 +174,7 @@
     tags:
       - etc
       - stig-selinux
+      - High
 
   - name: Make the SELinux configuration immutable
     command: "chattr +i /etc/selinux/config"
