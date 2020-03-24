@@ -14,6 +14,14 @@
      - selinux-policy
      - selinux-policy-targeted
      - screen
+     - dracut-fips
+     - fipscheck
+     - aide
+     - rsyslog
+     - pam_pkcs11
+     - pcsc-lite
+     - opensc
+     - yum-utils
     tags:
      - etc
      - packages
@@ -85,7 +93,7 @@
       group: root
     tags:
       - etc
-      - ssh-config
+      - stig-ssh
       - High  
 
   - name: Configure Audit daemon
@@ -114,6 +122,39 @@
       - etc
       - stig-audit
       - High
+
+  - name: filter audit log messages from local messages log
+    lineinfile:
+      path: /etc/rsyslog.conf
+      regexp: '#filter audit log messages for local messages log'
+      line: '#filter audit log messages for local messages log'
+      insertafter: '^#### RULES ####'
+      state: present
+    tags:
+      - etc
+      - rsyslog-config
+
+  - name: filter audit log messages from local messages log+
+    lineinfile:
+      path: /etc/rsyslog.conf
+      regexp: ':programname, isequal, "audit" stop'
+      line: ':programname, isequal, "audit" stop'
+      insertafter: '^#filter audit log messages for local messages log'
+      state: present
+    tags:
+      - etc
+      - rsyslog-config
+
+  - name: filter audit log messages from local messages log++
+    lineinfile:
+      path: /etc/rsyslog.conf
+      regexp: ':programname, isequal, "audispd" stop'
+      line: ':programname, isequal, "audispd" stop'
+      insertafter: '^:programname, isequal, "audit" stop'
+      state: present
+    tags:
+      - etc
+      - rsyslog-conf
 
   - name: Configure Sysctl Securit Limits
     copy:
@@ -212,8 +253,10 @@
       state: "restarted"
     with_items:
       - sshd
+      - rsyslog
     tags:
       - etc
-      - ssh-config
+      - stig-ssh
+      - stig-rsyslog
 ...
 
