@@ -6,7 +6,7 @@
 ########
 
 - name: Install and enable cockpit for monitoring and management
-  hosts: sandbox
+  hosts: all
 
   tasks:
 

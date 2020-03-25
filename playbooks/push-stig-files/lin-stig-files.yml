@@ -239,6 +239,51 @@
     tags:
       - etc
       - stig-users
+
+  - name: check prelink binary installed
+    stat:
+      path: /usr/sbin/prelink
+    register: prelink_exists
+    tags:
+      - grub2_enable_fips_mode
+      - high
+
+  - name: disable prelink
+    lineinfile:
+      dest: /etc/sysconfig/prelink
+      regexp: ^#?PRELINKING
+      line: PRELINKING=no
+    tags:
+      - grub2_enable_fips_mode
+      - high
+      - etc
+
+  - name: revert prelinking binaries
+    command: /usr/sbin/prelink -ua
+    when:
+      - prelink_exists.stat.exists
+    tags:
+      - grub2_enable_fips_mode
+      - high
+
+  - name: Check if system supports AES-NI
+    command: grep -q -m1 -o aes /proc/cpuinfo
+    failed_when: aesni_supported.rc > 1
+    register: aesni_supported
+    check_mode: false
+    tags:
+      - grub2_enable_fips_mode
+      - high
+
+  - name: Ensure dracut-fips-aesni is installed
+    package:
+      name: dracut-fips-aesni
+      state: present
+    when:
+      - aesni_supported.rc == 0
+    tags:
+      - grub2_enable_fips_mode
+      - high
         
   - name: Reset SE Linux File Context on the etc directory structructure
     command: "restorecon -R /etc"
@@ -258,5 +303,6 @@
       - etc
       - stig-ssh
       - stig-rsyslog
+
 ...
 
