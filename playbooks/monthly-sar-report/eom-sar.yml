@@ -5,6 +5,11 @@
   remote_user: some-user
 
   tasks:
+  - name: install the systat package if not already present
+    packge:
+      name: systat
+      state: latest
+        
   - name: run the sar-report script and write the output to a file
     shell: rm *.stats.*; /usr/local/bin/sar-report.sh |tee -a ~/{{ inventory_hostname }}.stats.$(date +%F)
 
