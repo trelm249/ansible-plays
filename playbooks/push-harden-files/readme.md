@@ -1,0 +1,4 @@
+## README for push-harden-files  
+> This playbook hardens RHEL/CentOS 7.X systems per guidance found in the DISA STIG for RHEL 7 and guidance from the Center for Internet Security. Some of the content of this playbook also borrows (thus is derivative) from Compliance as Code ansible roles. It is a work in progress and does not seek to bring a system into 100% compliance with the DISA STIG. It does however address many high findings and also applies controls that should be common sense anyway. Adapt to your environment as you like.  
+
+> This playbook will not change any partitioning or logical volume mount points. Those hardening requirements should have been addressed at install time. There are some tasks that have the potential to break some things. Please test prior to using on critical or production systems.
