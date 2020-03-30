@@ -1,6 +1,6 @@
 ---
-- name: patch libvirt guests
-  hosts: sandbox
+- name: patch virtual guests
+  hosts: all
   gather_facts: yes
 
   tasks:
@@ -11,18 +11,17 @@
         state: latest
         update_cache: yes
       when:
-        ansible_distribution == 'CentOS'
-        or
-        ansible_distribution == 'RedHat'
+        - (ansible_distribution == 'CentOS' and ansible_distribution_version < '8')
+        - (ansible_distribution == 'RedHat' and ansible_distribution_version < '8')
 
     - name: DNF patch server
       dnf:
         name: "*"
         state: latest
       when:
-        ansible_distribution == 'Fedora'
-        and
-        ansible_distribution_version > '21'
+        - (ansible_distribution == 'Fedora' and ansible_distribution_version > '21')
+        - (ansible_distribution == 'CentOS' and ansible_distribution_version >= '8')
+        - (ansible_distribution == 'RedHat' and ansible_distribution_version >= '8')
 
     - name: Comparing last kernel and running kernel
       shell: |

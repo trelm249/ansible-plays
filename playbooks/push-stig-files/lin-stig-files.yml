@@ -22,6 +22,9 @@
      - pcsc-lite
      - opensc
      - yum-utils
+     - mailx
+     - cronie
+     - crontabs
     tags:
      - etc
      - packages
@@ -515,5 +518,30 @@
       - rpm_verify_permissions
       - high
 
-...
+  - name: Configure Periodic Execution of AIDE
+    cron:
+      name: run AIDE check
+      minute: 5
+      hour: 4
+      weekday: 0
+      user: root
+      job: '/usr/sbin/aide --check |/usr/bin/mailx -s \"\$HOSTNAME-\$(date +%F) - aide integrity check\" root@localhost"'
+      cron_file: aide-daily-check
+    tags:
+      - aide_periodic_cron_checking
+      - medium
 
+  - name: Ensure GPG check is globally activated (yum)
+    ini_file:
+      dest: /etc/yum.conf
+      section: main
+      option: gpgcheck
+      value: 1
+      create: false
+    when:
+      - (ansible_distribution == "RedHat" or ansible_distribution == "CentOS" or yum_config_file.stat.exists)
+    tags:
+      - ensure_gpgcheck_globally_activated
+      - high
+
+...
