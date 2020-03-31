@@ -38,6 +38,16 @@
       async: 1
       poll: 0
       when:
-        - running_kernel < latest_kernel 
+        - running_kernel < latest_kernel
+ 
+    - name: wait for systems to reboot
+      pause:
+        minutes: 3
+      when:
+        - running_kernel < latest_kernel
+
+    - name: verify system is up
+      ping:
+
 
 ...
