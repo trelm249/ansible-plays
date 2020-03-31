@@ -23,31 +23,21 @@
         - (ansible_distribution == 'CentOS' and ansible_distribution_version >= '8')
         - (ansible_distribution == 'RedHat' and ansible_distribution_version >= '8')
 
-    - name: Comparing last kernel and running kernel
-      shell: |
-        LAST_KERNEL=$(rpm -q --last kernel | perl -pe 's/^kernel-(\S+).*/$1/' | head -1)
-        CURRENT_KERNEL=$(uname -r)
+    - name: identify the running kernel
+      command: uname -r
+      register: running_kernel
 
-        if [[ $LAST_KERNEL != $CURRENT_KERNEL ]]; then
-          # Set reboot flag
-          touch /tmp/reboot
-        fi
+    - name: Register the most recently installed kernel
+      shell: rpm -q kernel |tail -1 |cut -d '-' -f 2,3
+      register: latest_kernel
+      args:
+        warn: no
 
-    - name: Checking if reboot flag exists
-      stat:
-        path: /tmp/reboot
-        checksum_algorithm: sha256
-      register: reboot
-
-    - name: Clearing reboot flag
-      file:
-        path: /tmp/reboot
-        state: absent
-      when: reboot.stat.exists == true
-
-    - name: Rebooting host(s).
-      shell: "sleep 5 && reboot"
+    - name: reboot if kernel is upgraded
+      command: shutdown -r +1
       async: 1
       poll: 0
-      when: reboot.stat.exists == true
+      when:
+        - running_kernel < latest_kernel 
 
+...
