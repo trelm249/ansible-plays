@@ -9,12 +9,12 @@
      state: directory
 
   - copy:
-     src: /home/nimdax/bin/mozstig/autoconfig.js
+     src: ./autoconfig.js
      dest: /usr/lib64/firefox/defaults/preferences/
      mode: 640
 
   - copy:
-     src: /home/nimdax/bin/mozstig/mozilla.cfg
+     src: ./mozilla.cfg
      dest: /usr/lib64/firefox/
      mode: 640
 

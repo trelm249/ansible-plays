@@ -9,7 +9,7 @@
      state: directory
 
   - copy:
-     src: /home/nimdax/bin/chromestig/stig.json
+     src: ./stig.json
      dest: /etc/opt/chrome/policies/managed/
      mode: 644
 

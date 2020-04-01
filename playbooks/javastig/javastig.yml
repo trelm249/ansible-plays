@@ -9,12 +9,12 @@
      state: directory
 
   - copy:
-     src: /home/nimdax/bin/javastig/deployment.properties
+     src: ./deployment.properties
      dest: /etc/.java/deployment/
      mode: 640
 
   - copy:
-     src: /home/nimdax/bin/javastig/deployment.config
+     src: ./deployment.config
      dest: /etc/.java/deployment/
      mode: 640
 
