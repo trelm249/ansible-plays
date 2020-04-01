@@ -10,18 +10,16 @@
         name: "*"
         state: latest
         update_cache: yes
-      when:
-        - (ansible_distribution == 'CentOS' and ansible_distribution_version < '8')
-        - (ansible_distribution == 'RedHat' and ansible_distribution_version < '8')
+      when: (ansible_distribution == 'CentOS' and ansible_distribution_version < '8') or
+        (ansible_distribution == 'RedHat' and ansible_distribution_version < '8')
 
     - name: DNF patch server
       dnf:
         name: "*"
         state: latest
-      when:
-        - (ansible_distribution == 'Fedora' and ansible_distribution_version > '21')
-        - (ansible_distribution == 'CentOS' and ansible_distribution_version >= '8')
-        - (ansible_distribution == 'RedHat' and ansible_distribution_version >= '8')
+      when: (ansible_distribution == 'Fedora' and ansible_distribution_version > '21') or
+        (ansible_distribution == 'CentOS' and ansible_distribution_version >= '8') or
+        (ansible_distribution == 'RedHat' and ansible_distribution_version >= '8')
 
     - name: identify the running kernel
       command: uname -r
@@ -37,14 +35,12 @@
       command: shutdown -r +1
       async: 1
       poll: 0
-      when:
-        - running_kernel < latest_kernel
- 
+      when: running_kernel.stdout != latest_kernel.stdout
+
     - name: wait for systems to reboot
       pause:
         minutes: 3
-      when:
-        - running_kernel < latest_kernel
+      when: running_kernel.stdout != latest_kernel.stdout
 
     - name: verify system is up
       ping:
