@@ -1,6 +1,6 @@
 ---
 - name: push configuration files and scripts to comply with the DISA STIG for RHEL 7
-  hosts: "{{R7HOSTS}}"
+  hosts: c7hosts
 
   tasks:
   - name: "Ensure packages are installed"
@@ -543,5 +543,78 @@
     tags:
       - ensure_gpgcheck_globally_activated
       - high
+
+  - name: Set Account Expiration Following Inactivity
+    lineinfile:
+      create: true
+      dest: /etc/default/useradd
+      regexp: ^INACTIVE
+      line: INACTIVE=0
+    tags:
+      - account_disable_post_pw_expiration
+      - medium
+
+  - name: Prevent Log In to Accounts With Empty Password - system-auth
+    replace:
+      dest: /etc/pam.d/system-auth
+      follow: true
+      regexp: nullok
+    tags:
+      - no_empty_passwords
+      - high
+
+  - name: Prevent Log In to Accounts With Empty Password - password-auth
+    replace:
+      dest: /etc/pam.d/password-auth
+      follow: true
+      regexp: nullok
+    tags:
+      - no_empty_passwords
+      - high
+
+  - name: Set Password Maximum Age
+    lineinfile:
+      create: true
+      dest: /etc/login.defs
+      regexp: ^#?PASS_MAX_DAYS
+      line: PASS_MAX_DAYS 60
+    tags:
+      - accounts_maximum_age_login_defs
+      - medium
+
+  - name: Set Password Minimum Age
+    lineinfile:
+      create: true
+      dest: /etc/login.defs
+      regexp: ^#?PASS_MIN_DAYS
+      line: PASS_MIN_DAYS 1
+    tags:
+      - accounts_minimum_age_login_defs
+      - medium
+
+  - name: Set Password Hashing Algorithm in /etc/libuser.conf
+    lineinfile:
+      dest: /etc/libuser.conf
+      insertafter: ^\s*\[defaults]
+      regexp: ^#?crypt_style
+      line: crypt_style = sha512
+      state: present
+      create: true
+    tags:
+      - set_password_hashing_algorithm_libuserconf
+      - medium
+
+  - name: Set Password Hashing Algorithm in /etc/login.defs
+    lineinfile:
+      dest: /etc/login.defs
+      regexp: ^#?ENCRYPT_METHOD
+      line: ENCRYPT_METHOD SHA512
+      state: present
+      create: true
+    tags:
+      - set_password_hashing_algorithm_logindefs
+      - medium
+
+
 
 ...
