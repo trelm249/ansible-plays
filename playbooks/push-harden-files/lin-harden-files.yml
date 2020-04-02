@@ -1,6 +1,6 @@
 ---
 - name: push configuration files and scripts to comply with the DISA STIG for RHEL 7
-  hosts: c7hosts
+  hosts: "{{R7HOSTS}}"
 
   tasks:
   - name: "Ensure packages are installed"
@@ -615,6 +615,105 @@
       - set_password_hashing_algorithm_logindefs
       - medium
 
+  - name: Set Fail Delay in /etc/login.defs
+    lineinfile:
+      dest: /etc/login.defs
+      regexp: ^#?FAIL_DELAY
+      line: FAIL_DELAY 4
+      state: present
+      create: true
+    tags:
+      - set_fail_delay_logindefs
+      - medium
 
+  - name: Ensure PAM variable ucredit is set accordingly
+    lineinfile:
+      create: true
+      dest: /etc/security/pwquality.conf
+      regexp: ^#?\s*ucredit
+      line: ucredit = -1
+    tags:
+      - accounts_password_pam_ucredit
+      - medium
+
+  - name: Ensure PAM variable maxrepeat is set accordingly
+    lineinfile:
+      create: true
+      dest: /etc/security/pwquality.conf
+      regexp: ^#?\s*maxrepeat
+      line: maxrepeat = 2
+    tags:
+      - accounts_password_pam_maxrepeat
+      - medium
+
+  - name: Ensure PAM variable ocredit is set accordingly
+    lineinfile:
+      create: true
+      dest: /etc/security/pwquality.conf
+      regexp: ^#?\s*ocredit
+      line: ocredit = -1
+    tags:
+      - accounts_password_pam_ocredit
+      - medium
+
+  - name: Ensure PAM variable lcredit is set accordingly
+    lineinfile:
+      create: true
+      dest: /etc/security/pwquality.conf
+      regexp: ^#?\s*lcredit
+      line: lcredit = -1
+    tags:
+      - accounts_password_pam_lcredit
+      - medium
+
+  - name: Ensure PAM variable dcredit is set accordingly
+    lineinfile:
+      create: true
+      dest: /etc/security/pwquality.conf
+      regexp: ^#?\s*dcredit
+      line: dcredit = -1
+    tags:
+      - accounts_password_pam_dcredit
+      - medium
+
+  - name: Ensure PAM variable minlen is set accordingly
+    lineinfile:
+      create: true
+      dest: /etc/security/pwquality.conf
+      regexp: ^#?\s*minlen
+      line: minlen = 15
+    tags:
+      - accounts_password_pam_minlen
+      - medium
+
+  - name: Ensure PAM variable minclass is set accordingly
+    lineinfile:
+      create: true
+      dest: /etc/security/pwquality.conf
+      regexp: ^#?\s*minclass
+      line: minclass = 4
+    tags:
+      - accounts_password_pam_minclass
+      - medium
+
+  - name: Ensure PAM variable difok is set accordingly
+    lineinfile:
+      create: true
+      dest: /etc/security/pwquality.conf
+      regexp: ^#?\s*difok
+      line: difok = 8
+    tags:
+      - accounts_password_pam_difok
+      - medium
+
+  - name: Ensure PAM variable maxclassrepeat is set accordingly
+    lineinfile:
+      create: true
+      dest: /etc/security/pwquality.conf
+      regexp: ^#?\s*maxclassrepeat
+      line: maxclassrepeat = 4
+    tags:
+      - accounts_password_pam_maxclassrepeat
+      - medium
 
 ...
