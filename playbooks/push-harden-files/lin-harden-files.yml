@@ -554,24 +554,6 @@
       - account_disable_post_pw_expiration
       - medium
 
-  - name: Prevent Log In to Accounts With Empty Password - system-auth
-    replace:
-      dest: /etc/pam.d/system-auth
-      follow: true
-      regexp: nullok
-    tags:
-      - no_empty_passwords
-      - high
-
-  - name: Prevent Log In to Accounts With Empty Password - password-auth
-    replace:
-      dest: /etc/pam.d/password-auth
-      follow: true
-      regexp: nullok
-    tags:
-      - no_empty_passwords
-      - high
-
   - name: Set Password Maximum Age
     lineinfile:
       create: true
@@ -716,6 +698,41 @@
       - accounts_password_pam_maxclassrepeat
       - medium
 
+  - name: Copy over compliant authconfig files for /etc/pam.d/
+    copy:
+      src: "{{item}}"
+      dest: /etc/pam.d/
+      mode: 0640
+      owner: root
+      group: root
+    loop:
+      - ./pamd/system-auth-local
+      - ./pamd/system-auth-ac
+      - ./pamd/password-auth-local
+      - ./pamd/password-auth-ac
+      - ./pamd/postlogin-local
+      - ./pamd/postlogin-ac
+    tags:
+      - stig-pam
+      - etc
 
+  - name: Create symobolic links in /etc/pam.d for system-auth, password-auth, and postlogin-auth
+    file:
+      src: '/etc/pam.d/{{ item.src }}'
+      dest: '/etc/pam.d/{{ item.dest }}'
+      state: link
+    loop:
+      - { src: system-auth-ac, dest: system-auth }
+      - { src: password-auth-ac, dest: password-auth }
+      - { src: postlogin-ac, dest: postlogin }
+    tags:
+      - stig-pam
+      - etc
+
+  - name: Reset SE Linux File Context on the etc directory structructure
+    command: "restorecon -R /etc"
+    tags:
+      - stig-pam
+      - etc
 
 ...
