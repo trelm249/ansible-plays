@@ -1,7 +1,0 @@
-/var/log/uvscan-*-*.log {
-    rotate 365
-    missingok
-    notifempty
-    daily
-    compress
-}
