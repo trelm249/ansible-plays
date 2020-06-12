@@ -1,0 +1,7 @@
+---
+- name: poweroff pis
+  hosts: all
+
+  tasks:
+    - name: power off pis 
+      command: shutdown -h +1

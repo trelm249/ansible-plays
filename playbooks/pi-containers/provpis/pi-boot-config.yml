@@ -1,7 +1,9 @@
-- name: basic pi raspbian config
-  hosts: pis
+---
+- name: Public key is deployed to managed hosts for Ansible
+  hosts: all
   vars_files:
-    - vars/main.yml
+    - ./vars/pi-boot.yml
+
 
   tasks:
   - name: Configure options in /boot/config.txt.
@@ -21,4 +23,6 @@
       insertbefore: "^exit"
       state: present
     with_items: "{{ raspberry_pi_rc_local_options }}"
+
+...
 

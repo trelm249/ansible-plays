@@ -1,0 +1,12 @@
+---
+- name: Install k3s to the manager
+  hosts: head
+
+  tasks:
+  - name: install k3s to the manager
+    shell: 'curl -sfL https://get.k3s.io | sh -'
+    args:
+      creates: /usr/local/bin/k3s
+
+
+...

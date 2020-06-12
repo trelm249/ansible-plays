@@ -1,0 +1,14 @@
+---
+- name: Install k3s to the agent nodes
+  hosts: nodes
+  vars_files:
+    - ./vars/node_vars.yml
+
+  tasks:
+  - name: install k3s to the agent nodes
+    shell: "curl -sfL https://get.k3s.io | {{ node_master }} {{ node_token }} sh -"
+    args:
+      creates: /usr/local/bin/k3s
+
+
+...

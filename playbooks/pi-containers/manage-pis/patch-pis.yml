@@ -1,0 +1,31 @@
+---
+- name: patch pis
+  hosts: pis
+
+  tasks:
+    - name: clear the cache
+      apt:
+        autoclean: yes
+        
+    - name: patch the pis
+      apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: reboot the pis
+      command: shutdown -r now
+      async: 1
+      poll: 0
+
+    - name: wait for system to reboot
+      pause:
+        minutes: 2
+
+    - name: verify system is up
+      ping:
+
+    - name: remove obsoleted packages
+      apt:
+        autoremove: yes
+...

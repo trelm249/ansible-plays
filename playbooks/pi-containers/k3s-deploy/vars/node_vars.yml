@@ -1,0 +1,4 @@
+---
+node_token: K3S_TOKEN={Some Token}
+
+node_master: K3S_URL=https://clearpi:6443
