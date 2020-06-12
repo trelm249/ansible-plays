@@ -1,0 +1,31 @@
+---
+- name: Install k3s to the agent nodes
+  hosts: nodes
+  vars_files:
+    - ./vars/node_vars.yml
+
+  tasks:
+  - name: Install prerequisite packages
+    package:
+      name: "{{item}}"
+      state: present
+    loop:
+     - container-selinux
+     - selinux-policy-base
+     - https://rpm.rancher.io/k3s-selinux-0.1.1-rc1.el7.noarch.rpm
+    when: (ansible_distribution == 'Fedora') or
+      (ansible_distribution == 'CentOS') or
+      (ansible_distribution == 'RedHat')
+
+  - name: install k3s to the agent nodes
+    shell: "curl -sfL https://get.k3s.io | {{ node_master }} {{ node_token }} sh -"
+    args:
+      creates: /usr/local/bin/k3s
+
+  - name: add the k3s port to the host firewall
+    firewalld:
+       port: 4663/tcp
+       permanent: yes
+       state: enabled
+
+...
