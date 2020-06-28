@@ -1,6 +1,7 @@
 ---
 - name: poweroff libvirt guests
   hosts: localhost
+  become: yes
 
   tasks:
     - name: get vm info
@@ -11,7 +12,7 @@
       virt: name={{item}} command=shutdown
       when: virt_info[item]['state'] != 'shutdown'
       with_items:
-         - fjb
-         - fserver1
-         - splunk1
-         - pulp1
+         - vm1
+         - vm2
+         - vm3
+...

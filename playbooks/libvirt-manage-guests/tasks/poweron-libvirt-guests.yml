@@ -1,6 +1,7 @@
 ---
 - name: poweron libvirt guests
   hosts: localhost
+  become: yes
 
   tasks:
     - name: start libvirtd
@@ -23,7 +24,7 @@
       virt: name={{item}} command=start
       when: virt_info[item]['state'] != 'running'
       with_items:
-           - fjb 
-           - fserver1
-           - splunk1
-           - pulp1
+           - vm1 
+           - vm2
+           - vm3
+...           

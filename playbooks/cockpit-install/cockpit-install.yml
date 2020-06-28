@@ -7,6 +7,7 @@
 
 - name: Install and enable cockpit for monitoring and management
   hosts: all
+  become: yes
 
   tasks:
 
