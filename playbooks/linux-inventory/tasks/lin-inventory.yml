@@ -1,19 +1,19 @@
 ---
 #this playbook hits all hosts runs the local inventory report script and fetches it.
 - name: run and retrieve the inventory report from all hosts
-  hosts: sandbox
+  hosts: instances
 
   tasks:
   - name: copy the inventory file over if it is updated
     copy:
-      src: inventory.sh
+      src: files/inventory.sh
       dest: /usr/local/bin/
       mode: 0755
       owner: root
       group: root
 
   - copy:
-     src: get-inventory.sh
+     src: files/get-inventory.sh
      dest: /usr/local/bin/
      mode: 0755
      owner: root
