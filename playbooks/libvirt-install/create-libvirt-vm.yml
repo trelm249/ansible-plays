@@ -1,6 +1,7 @@
 ---
 - name: create libvirt instance
   hosts: localhost
+  become: yes
 
   tasks:
   - name: create fedora vm
