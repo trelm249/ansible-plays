@@ -1,6 +1,7 @@
 ---
 - name: poweroff pis
   hosts: all
+  become: yes
 
   tasks:
     - name: power off pis 

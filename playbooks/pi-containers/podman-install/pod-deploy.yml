@@ -1,6 +1,7 @@
 ---
 - name: Install podman to the pis
   hosts: all
+  become: yes
 
   tasks:
   - name: add the podman apt repository

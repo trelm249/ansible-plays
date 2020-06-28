@@ -1,6 +1,7 @@
 ---
 - name: patch pis
   hosts: pis
+  become: yes
 
   tasks:
     - name: clear the cache
