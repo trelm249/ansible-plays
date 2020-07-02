@@ -1,5 +1,4 @@
 #!/bin/bash
-#Author: Trae Elmore
 #Filename: /home/user/rsyslog-certs/configsetup.sh
 #Date Created: 20180716
 #Last Modified: 20180716

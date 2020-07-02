@@ -1,12 +1,7 @@
 ---
-#######
-#Filename: setup-rsyslog-client.yml
-#Description: Ansible playbook to setup the next generation rsyslog client for the enclave
-#Author: Trae Elmore
-#######
-
 - name: install rsyslog and setup client for centralized rsyslog and audit log
   hosts: some-ansible-client
+  become: yes
 
   tasks:
 
