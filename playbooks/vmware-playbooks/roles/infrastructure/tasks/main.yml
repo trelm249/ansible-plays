@@ -5,5 +5,5 @@
 
 # Gather facts about the virtual machines in VCenter
 - include_tasks: get_virtual_machine_facts.yml
-
+- include_tasks: get_vcenter_facts.yml
 ...

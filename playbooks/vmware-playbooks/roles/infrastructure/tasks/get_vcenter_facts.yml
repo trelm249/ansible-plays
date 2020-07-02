@@ -1,0 +1,14 @@
+---
+- name: Get info about the vcenter
+  vmware_about_info:
+    validate_certs: no
+    hostname: "{{ VC_HOSTNAME }}"
+    username: "{{ VCUSER }}"
+    password: "{{ VCPASS }}"
+  register: vcenter_about_info
+  tags:
+    - joe.friday
+    - vcenter-info
+
+- debug: msg="{{ vcenter_about_info }}"
+...
