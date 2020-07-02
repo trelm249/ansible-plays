@@ -1,11 +1,4 @@
 ---
-# ######
-# Filename: build-provisoning-server.yml
-# Description: Ansible playbook to setup the environment provisioning server
-# Author: Trae Elmore
-# Note: This is based on using a fedora server and a fedora repo
-# #######
-
 - name: Setup the provisioning server for the environment
   hosts: prov1
   become: yes
