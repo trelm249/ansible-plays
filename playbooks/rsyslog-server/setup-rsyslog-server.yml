@@ -1,12 +1,7 @@
 ---
-#######
-#Filename: setup-rsyslog-server.yml
-#Description: Ansible playbook to setup the next generation rsyslog server for the enclave
-#Author: Trae Elmore
-#######
-
 - name: install rsyslog and setup server for centralized rsyslog and audit log
   hosts: rsyslog1
+  become: yes
 
   tasks:
 

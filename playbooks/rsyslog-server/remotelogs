@@ -1,4 +1,5 @@
 #rotate rule for remote logs
+#assumes logrotation and that splunk is in use
 
 /var/log/rsyslog/*/*.log {
 compress
