@@ -1,0 +1,5 @@
+---
+VC_HOSTNAME: vcenter
+VCUSER: user
+VCPASS: pass
+...

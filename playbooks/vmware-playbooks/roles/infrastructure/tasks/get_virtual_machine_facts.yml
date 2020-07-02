@@ -1,0 +1,17 @@
+---
+- name: Get the Virtual Machines in VCenter
+  vmware_vm_info:
+    validate_certs: no
+    hostname: "{{ VC_HOSTNAME }}"
+    username: "{{ VCUSER }}"
+    password: "{{ VCPASS }}"
+  register: vm_lists
+  tags:
+    - guests
+    - instances
+    - joe.friday
+
+#- debug: msg="{{ vm_lists['virtual_machines'].keys() }}"
+- debug: msg="{{ vm_lists }}"
+...
+

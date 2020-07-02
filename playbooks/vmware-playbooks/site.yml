@@ -1,0 +1,11 @@
+---
+- name: Gather VMware info
+  hosts: localhost
+  tasks:
+    - import_role:
+        name: infrastructure
+      tags:
+        - reconoiter
+        - interrogatories
+
+...

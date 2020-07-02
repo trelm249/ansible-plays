@@ -1,0 +1,9 @@
+---
+# Variable setup  
+- name: Include VCenter variables.  
+  include_vars: vcenter-vars.yml
+
+# Gather facts about the virtual machines in VCenter
+- include_tasks: get_virtual_machine_facts.yml
+
+...

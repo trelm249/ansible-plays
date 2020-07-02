@@ -1,0 +1,7 @@
+plugin: vmware_vm_inventory
+strict: False
+hostname: vcenter
+username: user
+password: pass
+validate_certs: False
+with_tags: True
