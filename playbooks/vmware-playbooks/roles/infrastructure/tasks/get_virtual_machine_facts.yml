@@ -5,13 +5,19 @@
     hostname: "{{ VC_HOSTNAME }}"
     username: "{{ VCUSER }}"
     password: "{{ VCPASS }}"
-  register: vm_lists
+  register: virtual_machine_facts
   tags:
     - guests
     - instances
-    - joe.friday
 
 #- debug: msg="{{ vm_lists['virtual_machines'].keys() }}"
-- debug: msg="{{ vm_lists }}"
+- debug: msg="{{ virtual_machine_facts.virtual_machines }}"
+
+- name: write output to a file
+  lineinfile:
+    create: yes
+    regexp: "NONEEXISTENTLINE"
+    path: ./log/virtual_machine_facts.{{ ansible_date_time.date }}.json
+    line: "{{ virtual_machine_facts.virtual_machines | to_nice_json }}"
 ...
 

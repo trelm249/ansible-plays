@@ -7,8 +7,14 @@
     password: "{{ VCPASS }}"
   register: vcenter_about_info
   tags:
-    - joe.friday
     - vcenter-info
 
 - debug: msg="{{ vcenter_about_info }}"
+
+- name: write output to a file
+  lineinfile:
+    create: yes
+    regexp: "NONEEXISTENTLINE"
+    path: ./log/vcenter_facts.{{ ansible_date_time.date }}.json
+    line: "{{ vcenter_about_info | to_nice_json }}"
 ...
