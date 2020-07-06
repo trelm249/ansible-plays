@@ -9,6 +9,7 @@
   tags:
     - guests
     - instances
+    - vm-facts
 
 #- debug: msg="{{ vm_lists['virtual_machines'].keys() }}"
 - debug: msg="{{ virtual_machine_facts.virtual_machines }}"
@@ -19,5 +20,9 @@
     regexp: "NONEEXISTENTLINE"
     path: ./log/virtual_machine_facts.{{ ansible_date_time.date }}.json
     line: "{{ virtual_machine_facts.virtual_machines | to_nice_json }}"
+  tags:
+    - guests
+    - instances
+    - vm-facts
 ...
 

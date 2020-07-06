@@ -1,0 +1,22 @@
+---
+- name: Get the Cluster Info in VCenter
+  vmware_cluster_info:
+    validate_certs: no
+    hostname: "{{ VC_HOSTNAME }}"
+    username: "{{ VCUSER }}"
+    password: "{{ VCPASS }}"
+    cluster_name: "{{ item }}"
+  register: vmw_cluster_facts
+  loop: "{{ VH_CLUSTERS }}"
+  tags:
+    - cluster-facts
+
+- name: write output to a file
+  lineinfile:
+    create: yes
+    regexp: "NONEEXISTENTLINE"
+    path: ./log/cluster_facts.{{ ansible_date_time.date }}.json
+    line: "{{ vmw_cluster_facts | to_nice_json }}"
+  tags:
+    - cluster-facts
+...
