@@ -11,9 +11,6 @@
     - instances
     - vm-facts
 
-#- debug: msg="{{ vm_lists['virtual_machines'].keys() }}"
-- debug: msg="{{ virtual_machine_facts.virtual_machines }}"
-
 - name: write output to a file
   lineinfile:
     create: yes

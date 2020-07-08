@@ -7,4 +7,5 @@
 - include_tasks: get_vcenter_facts.yml
 - include_tasks: get_cluster_facts.yml
 - include_tasks: get_virtual_machine_facts.yml
+
 ...

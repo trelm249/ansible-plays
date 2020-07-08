@@ -16,7 +16,7 @@
     create: yes
     regexp: "NONEEXISTENTLINE"
     path: ./log/cluster_facts.{{ ansible_date_time.date }}.json
-    line: "{{ vmw_cluster_facts | to_nice_json }}"
+    line: "{{ vmw_cluster_facts.results | to_nice_json }}"
   tags:
     - cluster-facts
 ...
