@@ -1,0 +1,29 @@
+---
+- name: Install docker-ce to the pis
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: add the docker-ce apt repository
+    lineinfile:
+      path: /etc/apt/sources.list.d/docker.list
+      line: 'deb [arch=armhf] https://download.docker.com/linux/raspbian buster stable'
+      create: yes
+
+  - name: add the docker-ce repository key
+    apt_key:
+      url: https://download.docker.com/linux/raspbian/gpg
+      state: present
+
+  - name: install docker-ce to the pis
+    apt: 
+      name: docker-ce
+      state: latest
+      update_cache: yes
+
+  - name: add the user to the docker group
+    user:
+      name: "{{ ansible_user_id }}"
+      group: docker
+      append: yes
+...

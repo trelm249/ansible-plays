@@ -10,7 +10,7 @@
       line: 'deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Raspbian_10/ /'
       create: yes
 
-  - name: add the podpam repository key
+  - name: add the podman repository key
     apt_key:
       url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Raspbian_10/Release.key
       state: present
