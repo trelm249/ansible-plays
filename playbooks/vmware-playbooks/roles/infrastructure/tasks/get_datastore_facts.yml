@@ -1,21 +1,21 @@
 ---
-- name: Get info about the vcenter
-  vmware_about_info:
+- name: Get info about the datastores
+  vmware_datastore_info:
     validate_certs: no
     hostname: "{{ VC_HOSTNAME }}"
     username: "{{ VCUSER }}"
     password: "{{ VCPASS }}"
-  register: vcenter_about_info
+  register: datastore_info
   delegate_to: localhost
   tags:
-    - vcenter-facts
+    - datastore-facts
 
 - name: write output to a file
   lineinfile:
     create: yes
     regexp: "NONEEXISTENTLINE"
-    path: ./log/vcenter_facts.{{ ansible_date_time.date }}.json
-    line: "{{ vcenter_about_info | to_nice_json }}"
+    path: ./log/datastore_facts.{{ ansible_date_time.date }}.json
+    line: "{{ datastore_info | to_nice_json }}"
   tags:
-    - vcenter-facts
+    - datastore-facts
 ...

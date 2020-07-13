@@ -1,0 +1,23 @@
+---
+- name: Get the ESXi hosts configuration info in a cluster in VCenter
+  vmware_host_config_info:
+    validate_certs: no
+    hostname: "{{ VC_HOSTNAME }}"
+    username: "{{ VCUSER }}"
+    password: "{{ VCPASS }}"
+    esxi_hostname: "{{ item }}"
+  register: hosts_config_facts
+  loop: "{{ VHC_NODES }}"
+  delegate_to: localhost
+  tags:
+    - hosts-config-facts
+
+- name: write output to a file
+  lineinfile:
+    create: yes
+    regexp: "NONEEXISTENTLINE"
+    path: ./log/hosts_config_facts.{{ ansible_date_time.date }}.json
+    line: "{{ hosts_config_facts.results | to_nice_json }}"
+  tags:
+    - hosts-config-facts
+...

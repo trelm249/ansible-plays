@@ -8,6 +8,7 @@
     cluster_name: "{{ item }}"
   register: vmw_cluster_facts
   loop: "{{ VH_CLUSTERS }}"
+  delegate_to: localhost
   tags:
     - cluster-facts
 

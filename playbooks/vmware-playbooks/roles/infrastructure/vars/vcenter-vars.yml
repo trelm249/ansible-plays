@@ -5,4 +5,11 @@ VCPASS: pass
 VH_CLUSTERS:
   - DC0_C0
   - DC0_C1
+VHC_NODES:
+  - DC0_C0_H0
+  - DC0_C0_H1
+  - DC0_C0_H2
+  - DC0_C1_H0
+  - DC0_C1_H1
+  - DC0_C1_H2
 ...
