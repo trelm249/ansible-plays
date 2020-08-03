@@ -1,5 +1,5 @@
 ---
-VC_HOSTNAME: 192.168.122.6
+VC_HOSTNAME: vcenter1
 VCUSER: user
 VCPASS: pass
 VH_CLUSTERS:
@@ -12,4 +12,11 @@ VHC_NODES:
   - DC0_C1_H0
   - DC0_C1_H1
   - DC0_C1_H2
+CLUSTER_NU:
+  - 0
+  - 1
+NODE_NU:
+  - 0
+  - 1
+  - 2
 ...

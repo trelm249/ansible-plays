@@ -15,8 +15,9 @@
   lineinfile:
     create: yes
     regexp: "NONEEXISTENTLINE"
-    path: ./log/virtual_machine_facts.{{ ansible_date_time.date }}.json
-    line: "{{ virtual_machine_facts.virtual_machines | to_nice_json }}"
+    path: ./log/virtual_machine_facts.{{ item.guest_name }}.{{ ansible_date_time.date }}.json
+    line: "{{ item | to_nice_json }}"
+  loop: "{{ virtual_machine_facts.virtual_machines }}"
   tags:
     - guests
     - instances

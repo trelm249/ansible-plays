@@ -14,7 +14,7 @@
   lineinfile:
     create: yes
     regexp: "NONEEXISTENTLINE"
-    path: ./log/vcenter_facts.{{ ansible_date_time.date }}.json
+    path: ./log/vcenter_facts.{{VC_HOSTNAME }}.{{ ansible_date_time.date }}.json
     line: "{{ vcenter_about_info | to_nice_json }}"
   tags:
     - vcenter-facts
