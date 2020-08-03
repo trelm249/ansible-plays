@@ -14,8 +14,9 @@
   lineinfile:
     create: yes
     regexp: "NONEEXISTENTLINE"
-    path: ./log/datastore_facts.{{ ansible_date_time.date }}.json
-    line: "{{ datastore_info | to_nice_json }}"
+    path: ./log/datastore_facts.{{ item.name }}.{{ ansible_date_time.date }}.json
+    line: "{{ item | to_nice_json }}"
+  loop: "{{ datastore_info.datastores }}"
   tags:
     - datastore-facts
 ...

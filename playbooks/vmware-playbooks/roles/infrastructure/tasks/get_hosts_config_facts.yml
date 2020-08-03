@@ -16,8 +16,9 @@
   lineinfile:
     create: yes
     regexp: "NONEEXISTENTLINE"
-    path: ./log/hosts_config_facts.{{ ansible_date_time.date }}.json
-    line: "{{ hosts_config_facts.results | to_nice_json }}"
+    path: ./log/hosts_config_facts.{{ item.item }}.{{ ansible_date_time.date }}.json
+    line: "{{ item | to_nice_json }}"
+  loop: "{{ hosts_config_facts.results }}"
   tags:
     - hosts-config-facts
 ...
