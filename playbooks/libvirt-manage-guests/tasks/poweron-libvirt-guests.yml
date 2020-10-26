@@ -1,7 +1,6 @@
 ---
 - name: poweron libvirt guests
   hosts: localhost
-  become: yes
 
   tasks:
     - name: start libvirtd

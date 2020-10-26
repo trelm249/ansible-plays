@@ -1,7 +1,6 @@
 ---
 - name: push configuration files and scripts to comply with the DISA STIG for RHEL 7
   hosts: c7hosts
-  become: yes
 
   tasks:
   - name: "Ensure packages are installed"

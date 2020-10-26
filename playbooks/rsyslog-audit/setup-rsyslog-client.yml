@@ -1,7 +1,6 @@
 ---
 - name: install rsyslog and setup client for centralized rsyslog and audit log
   hosts: some-ansible-client
-  become: yes
 
   tasks:
 

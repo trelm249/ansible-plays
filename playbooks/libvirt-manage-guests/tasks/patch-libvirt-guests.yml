@@ -1,7 +1,6 @@
 ---
 - name: patch virtual guests
   hosts: instances
-  become: yes
   gather_facts: yes
 
   tasks:

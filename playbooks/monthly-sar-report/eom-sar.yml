@@ -2,8 +2,6 @@
 #this playbook hits all hosts runs the local sar report script and fetches it.
 - name: run and retrieve the EOM SAR report from all hosts
   hosts: {{ targets }}
-  becomre: yes
-  remote_user: some-user
 
   tasks:
   - name: install the systat package if not already present

@@ -1,7 +1,6 @@
 ---
 - name: install rsyslog and setup server for centralized rsyslog and audit log
   hosts: rsyslog1
-  become: yes
 
   tasks:
 

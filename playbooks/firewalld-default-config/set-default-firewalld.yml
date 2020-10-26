@@ -1,7 +1,6 @@
 ---
 - name: apply the default firewalld config
   hosts: all
-  become: yes
 
   tasks:
     - firewalld:

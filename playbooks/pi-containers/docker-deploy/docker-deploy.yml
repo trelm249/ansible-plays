@@ -1,7 +1,6 @@
 ---
 - name: Install docker-ce to the pis
   hosts: all
-  become: yes
 
   tasks:
   - name: add the docker-ce apt repository

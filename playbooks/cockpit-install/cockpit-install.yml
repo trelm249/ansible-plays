@@ -1,13 +1,6 @@
 ---
-#######
-##Filename: cockpit-install.yml
-##Description: Ansible playbook to install and enable cockpit
-##Author: Trae Elmore
-########
-
 - name: Install and enable cockpit for monitoring and management
   hosts: all
-  become: yes
 
   tasks:
 

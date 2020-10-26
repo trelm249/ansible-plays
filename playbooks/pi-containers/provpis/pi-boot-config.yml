@@ -1,7 +1,6 @@
 ---
 - name: Public key is deployed to managed hosts for Ansible
   hosts: all
-  become: yes
   vars_files:
     - ./vars/pi-boot.yml
 
