@@ -1,7 +1,7 @@
 ---
 - name: Setup the provisioning server for the environment
   hosts: prov1
-  become: yes
+#  become: yes
 
   tasks:
 
