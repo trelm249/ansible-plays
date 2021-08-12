@@ -1,0 +1,10 @@
+---
+# tasks file for reg-subscription---
+- name: register the host
+  redhat_subscription:
+    state: present
+    username: "{{ rhuser }}"
+    password: "{{ rhpass }}"
+    autosubscribe: true
+
+...

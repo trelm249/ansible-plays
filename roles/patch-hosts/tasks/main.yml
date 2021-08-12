@@ -1,0 +1,30 @@
+---
+- name: Yum patch EL7 or earlier
+  yum:
+    update_cache: yes
+    name: "*"
+    state: latest
+    exclude: kernel*
+    update_cache: yes
+  when: (ansible_distribution == 'CentOS' and ansible_distribution_version < '8') or
+    (ansible_distribution == 'RedHat' and ansible_distribution_version < '8')
+
+- name: DNF patch EL8 and later
+  dnf:
+    name: "*"
+    state: latest
+    exclude: kernel*
+    update_cache: yes
+  when: (ansible_distribution == 'Fedora' and ansible_distribution_version > '21') or
+    (ansible_distribution == 'CentOS' and ansible_distribution_version >= '8') or
+    (ansible_distribution == 'RedHat' and ansible_distribution_version >= '8')
+
+- name: APT patch Debian/Ubuntu
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+    autoremove: yes
+    autoclean: yes
+  when: (ansible_distribution == 'Debian') or (ansible_distribution == 'Ubuntu')
+...

@@ -1,0 +1,44 @@
+---
+- name: Yum patch server
+  yum:
+    update_cache: yes
+    name: "*"
+    state: latest
+    update_cache: yes
+  when: (ansible_distribution == 'CentOS' and ansible_distribution_version < '8') or
+    (ansible_distribution == 'RedHat' and ansible_distribution_version < '8')
+
+- name: DNF patch server
+  dnf:
+    name: "*"
+    state: latest
+  when: (ansible_distribution == 'Fedora' and ansible_distribution_version > '21') or
+    (ansible_distribution == 'CentOS' and ansible_distribution_version >= '8') or
+    (ansible_distribution == 'RedHat' and ansible_distribution_version >= '8')
+
+- name: identify the running kernel
+  command: uname -r
+  register: running_kernel
+
+- name: Register the most recently installed kernel
+  shell: rpm -q kernel |tail -1 |cut -d '-' -f 2,3
+  register: latest_kernel
+  args:
+    warn: no
+
+- name: reboot if kernel is upgraded
+  command: shutdown -r +1
+  async: 1
+  poll: 0
+  when: running_kernel.stdout != latest_kernel.stdout
+
+- name: wait for systems to reboot
+  pause:
+    minutes: 2
+  when: running_kernel.stdout != latest_kernel.stdout
+
+- name: verify system is up
+  ping:
+
+
+...

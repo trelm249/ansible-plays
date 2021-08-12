@@ -1,0 +1,73 @@
+---
+- name: Yum patch server
+  yum:
+    update_cache: yes
+    name: "*"
+    state: latest
+    update_cache: yes
+  when: (ansible_distribution == 'CentOS' and ansible_distribution_version < '8') or
+    (ansible_distribution == 'RedHat' and ansible_distribution_version < '8')
+
+- name: DNF patch server
+  dnf:
+    name: "*"
+    state: latest
+  when: (ansible_distribution == 'Fedora' and ansible_distribution_version > '21') or
+    (ansible_distribution == 'CentOS' and ansible_distribution_version >= '8') or
+    (ansible_distribution == 'RedHat' and ansible_distribution_version >= '8')
+
+- name: APT patch Debian/Ubuntu
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+    autoremove: yes
+    autoclean: yes
+  when: (ansible_distribution == 'Debian') or (ansible_distribution == 'Ubuntu')
+
+- name: identify the running kernel (Red Hat Derived)
+  command: uname -r
+  register: r_running_kernel
+  when: (ansible_distribution == 'Fedora') or
+    (ansible_distribution == 'CentOS') or
+    (ansible_distribution == 'RedHat')
+
+- name: identify the running kernel (Debian Derived)
+  shell: uname -r |cut -d '-' -f 1,2
+  register: d_running_kernel
+  when: (ansible_distribution == 'Debian') or (ansible_distribution == 'Ubuntu')
+
+- name: Register the most recently installed kernel with RPM
+  shell: rpm -q kernel |tail -1 |cut -d '-' -f 2,3
+  register: r_latest_kernel
+  args:
+    warn: no
+  when: (ansible_distribution == 'Fedora') or
+    (ansible_distribution == 'CentOS') or
+    (ansible_distribution == 'RedHat')
+
+- name: Regiser the most recently installed kernel with DPKG
+  shell: dpkg -l | grep linux-image |tail -1 |cut -d '-' -f 3,4
+  register: d_latest_kernel
+  args:
+    warn: no
+  when: (ansible_distribution == 'Debian') or (ansible_distribution == 'Ubuntu')
+
+- name: reboot if kernel is upgraded
+  command: shutdown -r +1
+  async: 1
+  poll: 0
+  when: (r_running_kernel != r_latest_kernel) or
+    (d_running_kernel != d_latest_kernel)
+
+- name: wait for systems to reboot
+  pause:
+    minutes: 2
+  when: (r_running_kernel != r_latest_kernel) or
+    (d_running_kernel != d_latest_kernel)
+
+- name: verify system is up
+  ping:
+
+
+...

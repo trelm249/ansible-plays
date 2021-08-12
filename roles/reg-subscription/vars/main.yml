@@ -1,0 +1,4 @@
+---
+# vars file for reg-subscription---
+rhuser: $SOMEUSER
+rhpass: $SOMEPASS
