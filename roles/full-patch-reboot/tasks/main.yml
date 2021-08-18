@@ -1,7 +1,6 @@
 ---
 - name: Yum patch server
   yum:
-    update_cache: yes
     name: "*"
     state: latest
     update_cache: yes

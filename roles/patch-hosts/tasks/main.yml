@@ -1,7 +1,6 @@
 ---
 - name: Yum patch EL7 or earlier
   yum:
-    update_cache: yes
     name: "*"
     state: latest
     exclude: kernel*
