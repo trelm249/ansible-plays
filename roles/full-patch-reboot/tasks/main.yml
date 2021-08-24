@@ -13,7 +13,8 @@
     state: latest
   when: (ansible_distribution == 'Fedora' and ansible_distribution_version > '21') or
     (ansible_distribution == 'CentOS' and ansible_distribution_version >= '8') or
-    (ansible_distribution == 'RedHat' and ansible_distribution_version >= '8')
+    (ansible_distribution == 'RedHat' and ansible_distribution_version >= '8') or
+    (ansible_distribution == 'Common Base Linux Mariner')
 
 - name: APT patch Debian/Ubuntu
   apt:
@@ -29,7 +30,8 @@
   register: r_running_kernel
   when: (ansible_distribution == 'Fedora') or
     (ansible_distribution == 'CentOS') or
-    (ansible_distribution == 'RedHat')
+    (ansible_distribution == 'RedHat') or
+    (ansible_distribution == 'Common Base Linux Mariner')
 
 - name: identify the running kernel (Debian Derived)
   shell: uname -r |cut -d '-' -f 1,2
@@ -43,7 +45,8 @@
     warn: no
   when: (ansible_distribution == 'Fedora') or
     (ansible_distribution == 'CentOS') or
-    (ansible_distribution == 'RedHat')
+    (ansible_distribution == 'RedHat') or
+    (ansible_distribution == 'Common Base Linux Mariner')
 
 - name: Regiser the most recently installed kernel with DPKG
   shell: dpkg -l | grep linux-image |tail -1 |cut -d '-' -f 3,4
