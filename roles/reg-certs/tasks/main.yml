@@ -1,0 +1,21 @@
+---
+# tasks file for reg-certs
+- name: copy the cert file to the cert store
+  copy:
+    src: '../files/example.crt'
+    dest: '/etc/pki/ca-trust/source/anchors/'
+    owner: root
+    group: root
+    mode: 0644
+  when: (ansible_distribution == 'Fedora') or
+    (ansible_distribution == 'CentOS') or
+    (ansible_distribution == 'RedHat') or
+    (ansible_distribution == 'Common Base Linux Mariner')
+
+- name: activate the certificate in the cert store
+  command: 'update-ca-trust extract'
+  when: (ansible_distribution == 'Fedora') or
+    (ansible_distribution == 'CentOS') or
+    (ansible_distribution == 'RedHat') or
+    (ansible_distribution == 'Common Base Linux Mariner')
+...

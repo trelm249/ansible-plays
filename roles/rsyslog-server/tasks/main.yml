@@ -1,0 +1,59 @@
+---
+- name: "Ensure rsyslog is installed"
+  dnf:
+    name: "{{item}}"
+    state: present
+  loop:
+    - rsyslog
+    - rsyslog-gnutls
+    - gnutls-utils
+    - bind-utils
+    - audispd-plugins
+
+- name: "Ensure audit is installed"
+  dnf:
+    name: "{{item}}"
+    state: present
+  loop:
+    - audit
+
+- copy:
+    src: '../files/remotelogs'
+    dest: /etc/logrotate.d/
+    mode: 0640
+    owner: root
+    group: root
+
+- name: Copy over the remotelogs.conf file
+  copy:
+    src: '../files/remotelogs.conf'
+    dest: '/etc/rsyslog.d/remotelogs.conf'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: enable auditd stream to rsyslog
+  lineinfile:
+    path: /etc/audit/plugins.d/syslog.conf
+    regexp: '^active = no'
+    line: 'active = yes'
+
+- name: Enable service rsyslog
+  service:
+    name: "rsyslog"
+    enabled: "yes"
+    state: "restarted"
+
+- name: add syslog to the host firewall rules
+  firewalld:
+    service: syslog
+    permanent: yes
+    state: enabled
+    zone: work
+
+- name: explicitly open port 514 in tcp
+  firewalld:
+    port: 514/tcp
+    permanent: yes
+    state: enabled
+    zone: work

@@ -1,0 +1,87 @@
+---
+- name: "Ensure packages are installed"
+  package:
+    name: "{{item}}"
+    state: present
+  loop:
+    - rsyslog
+    - rsyslog-gnutls
+    - gnutls-utils
+    - audit
+    - audispd-plugins
+
+- name: "remove audispd-plugins"
+  package:
+    name: "audispd-plugins"
+    state: absent
+  when: (ansible_distribution == 'CentOS' and ansible_distribution_version < '8') or
+      (ansible_distribution == 'RedHat' and ansible_distribution_version < '8')
+
+- name: disable legacy log forwarding
+  shell: sed -i 's/^*.* /#*.*/' /etc/rsyslog.conf
+
+- name: filter audit log messages from local messages log
+  lineinfile:
+    path: /etc/rsyslog.conf
+    regexp: '#filter audit log messages for local messages log'
+    line: '#filter audit log messages for local messages log'
+    insertafter: '^#### RULES ####'
+    state: present
+
+- name: filter audit log messages from local messages log+
+  lineinfile:
+    path: /etc/rsyslog.conf
+    regexp: ':programname, isequal, "audit" stop'
+    line: ':programname, isequal, "audit" stop'
+    insertafter: '^#filter audit log messages for local messages log'
+    state: present
+
+- name: filter audit log messages from local messages log++
+  lineinfile:
+    path: /etc/rsyslog.conf
+    regexp: ':programname, isequal, "audisp*" stop'
+    line: ':programname, isequal, "audisp*" stop'
+    insertafter: '^:programname, isequal, "audit" stop'
+    state: present
+
+- name: Create the tcp.conf file for remote rsyslog
+  copy:
+    src: './tcp.conf'
+    dest: '/etc/rsyslog.d/tcp.conf'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: add log server to hosts file
+  lineinfile:
+    path: /etc/hosts
+    line: "{{item}}"
+  loop:
+    - 'X.X.X.X syslog1'
+    - 'X.X.X.X syslog2'
+
+- name: enable auditd stream to rsyslog
+  lineinfile:
+    path: /etc/audisp/plugins.d/syslog.conf
+    regexp: '^active = no'
+    line: 'active = yes'
+  when: (ansible_distribution == 'CentOS' and ansible_distribution_version < '8') or
+      (ansible_distribution == 'RedHat' and ansible_distribution_version < '8')
+
+- name: enable auditd stream to rsyslog
+  lineinfile:
+    path: /etc/audit/plugins.d/syslog.conf
+    regexp: '^active = no'
+    line: 'active = yes'
+  when: (ansible_distribution == 'CentOS' and ansible_distribution_version >= '8') or
+    (ansible_distribution == 'RedHat' and ansible_distribution_version >= '8')
+
+- name: Restore file selinux context on certs
+  command: 'restorecon -Rv /etc/pki/rsyslog'
+
+- name: Enable service rsyslog
+  service:
+    name: "rsyslog"
+    enabled: "yes"
+    state: "restarted"
+
