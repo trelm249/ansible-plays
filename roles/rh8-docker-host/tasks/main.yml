@@ -1,0 +1,35 @@
+---
+- name: "Remove container tools if present"
+  dnf:
+    name: "{{item}}"
+    state: absent
+  loop:
+    - runc
+    - container-tools
+
+- name: "import the official docker gpg key"
+  rpm_key:
+    state: present
+    key: https://download.docker.com/linux/centos/gpg
+
+- name: "Add Docker-CE Repository"
+  yum_repository:
+    name: docker-ce-stable
+    description: Official Docker Community Edition
+    baseurl: https://download.docker.com/linux/centos/$releasever/$basearch/stable
+    gpgcheck: yes
+    enabled: yes
+    state: present
+
+- name: "Install docker-ce"
+  dnf:
+    name: "{{item}}"
+    state: present
+  loop:
+    - docker-ce
+
+- name: "Enable and start the docker service"
+  service:
+    name: "docker"
+    enabled: "yes"
+    state: "restarted"
